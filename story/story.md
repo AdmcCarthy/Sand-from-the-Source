@@ -47,9 +47,6 @@ data:
   ne_europe_outlets: data/ne_europe_outlets.geojson
   ne_europe_land: data/ne_europe_land.geojson
   ne_europe_slope_flow: data/ne_europe_slope_flow.geojson
-  ne_europe_sea: data/ne_europe_sea.geojson
-  north_sea_sea: data/north_sea_sea.geojson
-  norwegian_sea_sea: data/norwegian_sea_sea.geojson
   north_sea_catchments: data/north_sea_catchments.geojson
   north_sea_rivers: data/north_sea_rivers.geojson
   north_sea_outlets: data/north_sea_outlets.geojson
@@ -82,7 +79,7 @@ the terrain; dots are mouths; colour is the bedrock group. The sea floor is on R
 id: basin
 type: custom
 module: figures/basin.js
-data: [frames, ne_europe_catchments, ne_europe_rivers, ne_europe_outlets, ne_europe_land, ne_europe_slope_flow, ne_europe_sea, north_sea_catchments, north_sea_rivers, north_sea_outlets, north_sea_land, north_sea_slope_flow, north_sea_sea, norwegian_sea_catchments, norwegian_sea_rivers, norwegian_sea_outlets, norwegian_sea_land, norwegian_sea_slope_flow, norwegian_sea_sea]
+data: [frames, ne_europe_catchments, ne_europe_rivers, ne_europe_outlets, ne_europe_land, ne_europe_slope_flow, north_sea_catchments, north_sea_rivers, north_sea_outlets, north_sea_land, north_sea_slope_flow, norwegian_sea_catchments, norwegian_sea_rivers, norwegian_sea_outlets, norwegian_sea_land, norwegian_sea_slope_flow]
 state: { frame: ne_europe, view: group, rivers: all, shade: 1.5, fold: 3 }
 title: Shield, upland and plain feed the same seas
 subtitle: Present-day catchments on Relief terrain, coloured by bedrock group; rivers as ribbons over the terrain's fall lines

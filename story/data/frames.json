@@ -227,7 +227,20 @@
      4340000
     ],
     "crs": "EPSG:3035",
-    "cell_m": 2000
+    "cell_m": 2000,
+    "base": {
+     "depth_scale": {
+      "kind": "shelf",
+      "max_m": 1300,
+      "ticks_m": [
+       0,
+       250,
+       500,
+       1000
+      ]
+     },
+     "style": "Detuned: linear bathymetry on the shelf depth scale, stepped land classes cross-blended by climate zone"
+    }
    }
   },
   "north_sea": {
@@ -397,7 +410,20 @@
      6970000
     ],
     "crs": "EPSG:25832",
-    "cell_m": 900
+    "cell_m": 900,
+    "base": {
+     "depth_scale": {
+      "kind": "shelf",
+      "max_m": 1300,
+      "ticks_m": [
+       0,
+       250,
+       500,
+       1000
+      ]
+     },
+     "style": "Detuned: linear bathymetry on the shelf depth scale, stepped land classes cross-blended by climate zone"
+    }
    }
   },
   "norwegian_sea": {
@@ -545,7 +571,23 @@
      490000
     ],
     "crs": "+proj=lcc +lat_1=62 +lat_2=70 +lat_0=66 +lon_0=8 +x_0=0 +y_0=0 +ellps=GRS80 +units=m +no_defs",
-    "cell_m": 1000
+    "cell_m": 1000,
+    "base": {
+     "depth_scale": {
+      "kind": "ocean",
+      "max_m": 7000,
+      "ticks_m": [
+       0,
+       1000,
+       2000,
+       3000,
+       4000,
+       5000,
+       6000
+      ]
+     },
+     "style": "Detuned: linear bathymetry on the ocean depth scale, stepped land classes cross-blended by climate zone"
+    }
    }
   }
  }

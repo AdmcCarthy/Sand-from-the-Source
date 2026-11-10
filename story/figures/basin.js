@@ -15,7 +15,19 @@ function seaColour(metres, dark) {
   let t = Math.min(1, Math.max(0, metres / SEA_MAX)), k = 0; while (k < stops.length - 2 && t > stops[k + 1][0]) k++;
   const [t0, c0] = stops[k], [t1, c1] = stops[k + 1]; return d3.interpolateRgb(c0, c1)(Math.min(1, Math.max(0, (t - t0) / (t1 - t0 || 1))));
 }
-const bandMid = (levels, i) => i + 1 < levels.length ? (levels[i] + levels[i + 1]) / 2 : levels[i] + (levels[i] - (levels[i - 1] ?? 0)) / 2;
+const OCEAN_STOPS = [0, 200, 1000, 2000, 3000, 4000, 5000, 6000, 7000], OCEAN_MAX = 7000;
+const OCEAN = { light: ["#e2f4f9", "#bfe2ed", "#83bddc", "#5c9acd", "#4579ba", "#355a9f", "#2a3e80", "#1e2763", "#131546"], dark: ["#71b7c8", "#56a5bd", "#2c83aa", "#1d679c", "#154b8a", "#113375", "#101e5c", "#0a0b42", "#040027"] };
+function depthColour(kind, metres, dark) {
+  const cols = (kind === "ocean" ? OCEAN : SEA)[dark ? "dark" : "light"], br = kind === "ocean" ? OCEAN_STOPS : SEA_STOPS, max = kind === "ocean" ? OCEAN_MAX : SEA_MAX;
+  const stops = br.map((b, i) => [b / max, cols[i]]); if (cols.length > br.length) stops.push([1, cols.at(-1)]);
+  let t = Math.min(1, Math.max(0, metres / max)), k = 0; while (k < stops.length - 2 && t > stops[k + 1][0]) k++;
+  const [t0, c0] = stops[k], [t1, c1] = stops[k + 1]; return d3.interpolateRgb(c0, c1)(Math.min(1, Math.max(0, (t - t0) / (t1 - t0 || 1))));
+}
+// palette.js `tune`: saturation towards the colour's own grey, then lifted (mix > 0) or sunk
+function tune(h, sat, mix) { const c = d3.rgb(h), y = 0.2126 * c.r + 0.7152 * c.g + 0.0722 * c.b, t = mix > 0 ? 255 : 0, m = Math.abs(mix); const f = (v) => { const g = y + (v - y) * sat; return g + (t - g) * m; }; return d3.rgb(f(c.r), f(c.g), f(c.b)).formatHex(); }
+// the water family: flat ground in a detuned river blue, steep in a saturated indigo; ribbons take the flat tone, threads the ramp
+const SHAPE_FLAT = { light: "#7f9fb4", dark: "#7fa3b8" }, SHAPE_STEEP = { light: "#3a1f9c", dark: "#b08cff" };
+const shapeRampFor = (dark) => d3.scaleSequential(d3.interpolateHcl(SHAPE_FLAT[dark ? "dark" : "light"], SHAPE_STEEP[dark ? "dark" : "light"])).domain([0, 0.08]);
 
 // Relief's hillshade PNG is light (flat ground sits near 180 of 255), and soft-light is neutral at mid grey, so drawn as it
 // comes it barely shows. Flat ground is moved to mid grey and the slopes stretched before the shade is composited.
@@ -42,12 +54,11 @@ export default function basin(el, datasets, opts = {}) {
     const outlets = datasets[`${frame}_outlets`].features;
     const land = datasets[`${frame}_land`].features;
     const slope = datasets[`${frame}_slope_flow`] ? datasets[`${frame}_slope_flow`].features : [];
-    const sea = datasets[`${frame}_sea`] ? datasets[`${frame}_sea`].features : [];
-    const seaLevels = [...new Set(sea.map((f) => Math.abs(f.properties.level)))].sort((a, b) => a - b);
-    const img = new Image();
-    img.src = new URL(`${frame}_hillshade.png`, import.meta.url).href;
-    await new Promise((res) => { img.onload = res; img.onerror = res; });
-    return (cache[frame] = { systems, rivers, outlets, land, slope, sea, seaLevels, img: img.width ? toneHill(img) : null, meta: frames[frame] });
+    // Relief's hillshade and its base map in both themes (linear bathymetry, stepped climate-tinted land; Relief/docs/base-maps.md)
+    const load1 = async (name) => { const im = new Image(); im.src = new URL(name, import.meta.url).href; await new Promise((res) => { im.onload = res; im.onerror = res; }); return im.width ? im : null; };
+    const img = await load1(`${frame}_hillshade.png`);
+    const base = { light: await load1(`${frame}_base_light.png`), dark: await load1(`${frame}_base_dark.png`) };
+    return (cache[frame] = { systems, rivers, outlets, land, slope, base, img: img ? toneHill(img) : null, meta: frames[frame] });
   }
 
   const alpha = (hex, a) => { const c = d3.color(hex); if (!c) return hex; c.opacity = a; return c.formatRgb(); };
@@ -82,10 +93,10 @@ export default function basin(el, datasets, opts = {}) {
     const [px0, py1] = proj([x0, y0]), [px1, py0] = proj([x1, y1]);
     ctx.fillStyle = token("surface") || (dark ? "#1b2230" : "#eef1f4"); ctx.fillRect(0, 0, width, H);
     ctx.save(); ctx.beginPath(); ctx.rect(px0, py0, px1 - px0, py1 - py0); ctx.clip();
-    // the sea floor on Relief's depth scale (a flat wash where the frame has no bands), the land as a light wash
-    ctx.fillStyle = D.seaLevels.length ? seaColour(0, dark) : (dark ? "rgba(24,38,58,.6)" : "rgba(170,196,222,.45)"); ctx.fillRect(px0, py0, px1 - px0, py1 - py0);
-    for (const [i, lv] of D.seaLevels.entries()) { ctx.beginPath(); for (const f of D.sea) if (Math.abs(f.properties.level) === lv) path(f); ctx.fillStyle = seaColour(bandMid(D.seaLevels, i), dark); ctx.fill(); }
-    ctx.beginPath(); for (const f of D.land) path(f); ctx.fillStyle = dark ? "rgba(255,255,255,.07)" : "rgba(255,255,255,.55)"; ctx.fill();
+    // Relief's base map under everything, lightened a little on land so the catchment colours carry; a flat wash if a frame has none
+    const baseImg = D.base[dark ? "dark" : "light"];
+    if (baseImg) { ctx.drawImage(baseImg, px0, py0, px1 - px0, py1 - py0); ctx.beginPath(); for (const f of D.land) path(f); ctx.fillStyle = dark ? "rgba(0,0,0,.15)" : "rgba(255,255,255,.3)"; ctx.fill(); }
+    else { ctx.fillStyle = dark ? "rgba(24,38,58,.6)" : "rgba(170,196,222,.45)"; ctx.fillRect(px0, py0, px1 - px0, py1 - py0); ctx.beginPath(); for (const f of D.land) path(f); ctx.fillStyle = dark ? "rgba(255,255,255,.07)" : "rgba(255,255,255,.55)"; ctx.fill(); }
     // catchments
     const shown = D.systems.filter((f) => (f.properties.log10_area ?? 9) >= (state.fold ?? 0));
     for (const f of shown) { const c = fillOf(f.properties, view, dark); if (!c) continue; ctx.beginPath(); path(f); ctx.fillStyle = alpha(c, dark ? 0.6 : 0.55); ctx.fill(); }
@@ -95,20 +106,23 @@ export default function basin(el, datasets, opts = {}) {
     if (D.img && shade > 0) { ctx.save(); ctx.globalCompositeOperation = "soft-light"; ctx.globalAlpha = Math.min(1, shade); ctx.drawImage(D.img, px0, py0, px1 - px0, py1 - py0); if (shade > 1) { ctx.drawImage(D.img, px0, py0, px1 - px0, py1 - py0); ctx.globalCompositeOperation = "multiply"; ctx.globalAlpha = (shade - 1) * 0.6; ctx.drawImage(D.img, px0, py0, px1 - px0, py1 - py0); } ctx.restore(); }
     // water
     ctx.lineCap = "round"; ctx.lineJoin = "round";
-    // "all" is the catchment-shape view: the terrain's fall lines as fine threads under the rivers' ribbons
-    if (rivers === "slope" || rivers === "all") {
-      for (const f of D.slope) { ctx.beginPath(); path(f); ctx.strokeStyle = alpha(gradRamp(f.properties.mean_gradient), rivers === "all" ? 0.5 : 0.75); ctx.lineWidth = rivers === "all" ? 0.45 : 0.6; ctx.stroke(); }
-    }
+    // "all" is the catchment-shape view: the rivers as muted ribbons, and over them the terrain's fall lines in the saturated
+    // end of the same colour family, so the two read as one drawing of how each catchment drains
+    const combined = rivers === "all", shapeRamp = shapeRampFor(dark);
     if (rivers !== "off" && rivers !== "slope") {
       const sysOf = new Map(shown.map((f) => [f.properties.system, f.properties]));
       const byQ = D.rivers.filter((f) => !state.fold || sysOf.has(f.properties.system)).sort((a, b) => (a.properties.log_discharge ?? 0) - (b.properties.log_discharge ?? 0));
       for (const pass of ["glow", "core"]) for (const f of byQ) {
         const q = Math.max(0, f.properties.log_discharge ?? 0), s = sysOf.get(f.properties.system);
-        const col = view === "group" && s && s.cluster >= 0 ? GROUP_COLOURS[s.cluster % GROUP_COLOURS.length] : (dark ? "#a8d0ff" : "#1f5a8f");
+        let col = view === "group" && s && s.cluster >= 0 ? GROUP_COLOURS[s.cluster % GROUP_COLOURS.length] : (dark ? "#a8d0ff" : "#1f5a8f");
+        if (combined) col = view === "group" && s && s.cluster >= 0 ? tune(col, 0.35, dark ? -0.05 : 0.08) : SHAPE_FLAT[dark ? "dark" : "light"];
         ctx.beginPath(); path(f);
-        if (pass === "glow") { ctx.strokeStyle = alpha(col, 0.16); ctx.lineWidth = 2 + 2.4 * q; } else { ctx.strokeStyle = alpha(col, 0.9); ctx.lineWidth = 0.35 + 1.2 * q; }
+        if (pass === "glow") { ctx.strokeStyle = alpha(col, combined ? 0.1 : 0.16); ctx.lineWidth = 2 + 2.4 * q; } else { ctx.strokeStyle = alpha(col, combined ? 0.6 : 0.9); ctx.lineWidth = 0.35 + 1.2 * q; }
         ctx.stroke();
       }
+    }
+    if (rivers === "slope" || combined) {
+      for (const f of D.slope) { ctx.beginPath(); path(f); ctx.strokeStyle = alpha(shapeRamp(f.properties.mean_gradient), combined ? 0.9 : 0.85); ctx.lineWidth = combined ? 0.6 : 0.6; ctx.stroke(); }
     }
     for (const f of D.outlets) { const [x, y] = proj(f.geometry.coordinates); const r = Math.max(1.5, Math.sqrt(f.properties.discharge_cms || 1) / 7); ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fillStyle = dark ? "rgba(255,255,255,.85)" : "rgba(20,30,50,.85)"; ctx.fill(); }
     // sink names and a frame rule
@@ -128,7 +142,8 @@ export default function basin(el, datasets, opts = {}) {
     const BW = 210, BH = 11;
     // a quiet panel behind the legend so it reads over the map; its height follows what the legend will hold
     const nGroups = view === "group" ? Object.keys(D.meta.clusters).length : 0;
-    const panelH = (view === "group" ? nGroups * 15 : 35) + (rivers === "slope" || rivers === "all" ? 35 : 0) + (D.seaLevels.length ? 35 : 0) + 6;
+    const ds = D.meta.relief && D.meta.relief.base ? D.meta.relief.base.depth_scale : null;
+    const panelH = (view === "group" ? nGroups * 15 : 35) + (rivers === "slope" || rivers === "all" ? 35 : 0) + (ds ? 35 : 0) + 6;
     const labelW = view === "group" ? Math.max(...Object.values(D.meta.clusters).map((c) => ctx.measureText(`${c.name} (${c.n_systems})`).width)) + 18 : 0;
     ctx.fillStyle = dark ? "rgba(27,34,48,.78)" : "rgba(245,247,249,.82)"; ctx.fillRect(x - 7, H - 12 - panelH - 2, Math.max(BW, labelW, 240) + 14, panelH + 12);
     const row = (col, label) => { ctx.fillStyle = col; ctx.fillRect(x, y - 9, 12, 9); ctx.fillStyle = ink; ctx.fillText(label, x + 18, y); y -= 15; };
@@ -139,15 +154,9 @@ export default function basin(el, datasets, opts = {}) {
       y -= BH + 3; ctx.textAlign = "left"; ctx.font = "11px system-ui, sans-serif"; ctx.fillStyle = ink; ctx.fillText(title, x, y); y -= 15;
     };
     const lg = (v, lo, span) => (Math.log10(v) - lo) / span;
-    if (D.seaLevels.length) {
-      const L = D.seaLevels, n = L.length; ctx.font = "10px system-ui, sans-serif"; ctx.fillStyle = muted;
-      // label every band when they fit, else every other one, always the first and the last
-      const every = n > 7 ? 2 : 1;
-      for (const [i, lv] of L.entries()) { if (i % every && i !== n - 1) continue; ctx.textAlign = i === 0 ? "left" : i === n - 1 ? "right" : "center"; ctx.fillText(lv.toLocaleString("en-GB") + (i === n - 1 ? "+" : ""), x + (i === n - 1 ? BW : i * BW / n), y + 7); }
-      y -= 6; for (const [i] of L.entries()) { ctx.fillStyle = seaColour(bandMid(L, i), dark); ctx.fillRect(x + i * BW / n, y - BH, BW / n + 0.5, BH); }
-      y -= BH + 3; ctx.textAlign = "left"; ctx.font = "11px system-ui, sans-serif"; ctx.fillStyle = ink; ctx.fillText("sea floor, depth in m (Relief)", x, y); y -= 15;
-    }
-    if (rivers === "slope" || rivers === "all") bar(rivers === "all" ? "fall lines under the rivers, colour is gradient" : "slope flow, colour is the mean gradient", (t) => gradRamp(0.08 * t), [0, 2, 4, 6, 8].map((v) => [v / 8, v + " %"]));
+    // the depth key as Relief's manifest describes it: a linear bar on the frame's depth scale with the manifest's ticks
+    if (ds) { const max = ds.max_m, kind = ds.kind === "ocean" ? "ocean" : "sea"; bar(`sea floor, depth in m (Relief, linear, ${ds.kind} scale)`, (t) => depthColour(kind, t * max, dark), ds.ticks_m.filter((v) => v / max < 0.9).map((v) => [v / max, v.toLocaleString("en-GB")]).concat([[1, max.toLocaleString("en-GB") + "+"]])); }
+    if (rivers === "slope" || rivers === "all") bar(rivers === "all" ? "fall lines over the rivers, colour is gradient" : "slope flow, colour is the mean gradient", (t) => shapeRampFor(dark)(0.08 * t), [0, 2, 4, 6, 8].map((v) => [v / 8, v + " %"]));
     if (view === "group") { const cl = Object.entries(D.meta.clusters).sort((a, b) => +a[0] - +b[0]); for (const [i, c] of cl.reverse()) row(GROUP_COLOURS[+i % GROUP_COLOURS.length], `${c.name} (${c.n_systems})`); }
     else if (view === "quality") bar("sand quality proxy", (t) => qualRamp(0.1 + 0.5 * t), [0.1, 0.2, 0.3, 0.4, 0.5, 0.6].map((v) => [(v - 0.1) / 0.5, v.toFixed(1)]));
     else if (view === "yield") bar("sediment yield, t/km²/yr, log scale", (t) => yieldRamp(0.5 + 2.5 * t), [3, 10, 30, 100, 300, 1000].map((v) => [lg(v, 0.5, 2.5), v.toLocaleString("en-GB")]));

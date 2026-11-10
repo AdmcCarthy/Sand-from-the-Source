@@ -96,12 +96,17 @@ def main() -> None:
         bands = json.loads((RELIEF / fr / "regional.geojson").read_text(encoding="utf-8"))
         land = [f for f in bands["features"] if f["properties"]["kind"] == "land" and f["properties"]["level"] == 0]
         (OUT / f"{fr}_land.geojson").write_text(json.dumps({"type": "FeatureCollection", "features": land}, separators=(",", ":")), encoding="utf-8")
-        # the stacked sea bands too, so the page can colour the sea floor on Relief's depth scale
-        sea = [f for f in bands["features"] if f["properties"]["kind"] == "sea"]
-        (OUT / f"{fr}_sea.geojson").write_text(json.dumps({"type": "FeatureCollection", "features": sea}, separators=(",", ":")), encoding="utf-8")
+        # Relief's base map (linear bathymetry, stepped climate-tinted land; Relief/docs/base-maps.md), reduced like the hillshade,
+        # and its depth scale for the key
+        rman = json.loads((RELIEF / fr / "manifest.json").read_text(encoding="utf-8"))
+        for th, name in rman["base"]["regional"].items():
+            b = Image.open(RELIEF / fr / name).convert("RGB")
+            b = b.resize((1400, round(b.height * 1400 / b.width)), Image.LANCZOS)
+            b.save(ROOT / "story" / "figures" / f"{fr}_base_{th}.png", optimize=True)
         manifest["frames"][fr] = {"name": lay["name"], "crs": lay["crs"], "extent": lay["extent"], "bbox": lay["bbox"], "sinks": lay.get("sinks", []),
                                   "clusters": lay["clusters"], "budget": lay["budget"], "checks": lay.get("checks", []), "built": lay["built"],
-                                  "relief": {"extent": man["extent"], "crs": man["crs"], "cell_m": man["lods"]["regional"]["cell"]}}
+                                  "relief": {"extent": man["extent"], "crs": man["crs"], "cell_m": man["lods"]["regional"]["cell"],
+                                             "base": {"depth_scale": rman["base"]["depth_scale"], "style": rman["base"]["style"]}}}
     allsys = pd.concat(frames, ignore_index=True)
     allsys = allsys[[c for c in KEEP if c in allsys.columns]]
     # source terrain by catchment centroid: Britain and Ireland, Norway, Sweden and Finland, the continental lowlands
