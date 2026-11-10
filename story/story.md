@@ -226,7 +226,7 @@ subtitle: Median BQART sediment yield by source terrain, t per km² a year
 source: s2s
 confidence: derived
 unit: t per km² a year
-notes: BQART with Relief's relief, HydroRIVERS discharge, one mean temperature per climate zone and the paper's lithology factor; no reservoir trapping beyond a zone guess, so lowland rivers run high against gauges. The Swedish, Finnish and eastern medians are low because the ground there is flat and, in the north, cold; Relief's 4 km terrain for the whole continent smooths peaks, so steep small catchments run lower than on a finer grid.
+notes: BQART with Relief's relief, HydroRIVERS discharge, one mean temperature per climate zone and the paper's lithology factor; no reservoir trapping beyond a zone guess, so lowland rivers run high against gauges. The Swedish, Finnish and eastern medians are low because the ground there is flat and, in the north, cold; Relief's 2 km terrain for the whole continent still smooths the highest peaks, so steep small catchments run a little lower than on a finer grid.
 ```
 
 ## What reaches the shelf
