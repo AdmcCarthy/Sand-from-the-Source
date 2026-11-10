@@ -96,6 +96,9 @@ def main() -> None:
         bands = json.loads((RELIEF / fr / "regional.geojson").read_text(encoding="utf-8"))
         land = [f for f in bands["features"] if f["properties"]["kind"] == "land" and f["properties"]["level"] == 0]
         (OUT / f"{fr}_land.geojson").write_text(json.dumps({"type": "FeatureCollection", "features": land}, separators=(",", ":")), encoding="utf-8")
+        # the stacked sea bands too, so the page can colour the sea floor on Relief's depth scale
+        sea = [f for f in bands["features"] if f["properties"]["kind"] == "sea"]
+        (OUT / f"{fr}_sea.geojson").write_text(json.dumps({"type": "FeatureCollection", "features": sea}, separators=(",", ":")), encoding="utf-8")
         manifest["frames"][fr] = {"name": lay["name"], "crs": lay["crs"], "extent": lay["extent"], "bbox": lay["bbox"], "sinks": lay.get("sinks", []),
                                   "clusters": lay["clusters"], "budget": lay["budget"], "checks": lay.get("checks", []), "built": lay["built"],
                                   "relief": {"extent": man["extent"], "crs": man["crs"], "cell_m": man["lods"]["regional"]["cell"]}}

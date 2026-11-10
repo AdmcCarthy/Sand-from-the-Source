@@ -6,6 +6,17 @@ import { token, onSchemeChange } from "../runtime/js/subscout.js";
 
 const GROUP_COLOURS = ["#c8553d", "#3d6e9e", "#7a9a3b", "#b8860b", "#6b4c9a", "#2e8b8b", "#a0522d", "#5f5f5f"];
 
+// Relief's shelf depth ramp (0 to 1,300 m, linear; copied from Relief/preview/palette.js, Detuned style). The stacked sea bands
+// are coloured at their midpoints, so the sea floor reads on Relief's own scale and the key can show it.
+const SEA_STOPS = [0, 20, 50, 100, 200, 500, 1000], SEA_MAX = 1300;
+const SEA = { light: ["#e8f0f2", "#cfe1e6", "#aacdd8", "#7eb0c5", "#5891ae", "#3a6d94", "#264b73", "#162b50"], dark: ["#3a8aa2", "#2f7690", "#25647d", "#1c526b", "#144157", "#0e3045", "#092336", "#06172a"] };
+function seaColour(metres, dark) {
+  const cols = SEA[dark ? "dark" : "light"], stops = SEA_STOPS.map((b, i) => [b / SEA_MAX, cols[i]]).concat([[1, cols.at(-1)]]);
+  let t = Math.min(1, Math.max(0, metres / SEA_MAX)), k = 0; while (k < stops.length - 2 && t > stops[k + 1][0]) k++;
+  const [t0, c0] = stops[k], [t1, c1] = stops[k + 1]; return d3.interpolateRgb(c0, c1)(Math.min(1, Math.max(0, (t - t0) / (t1 - t0 || 1))));
+}
+const bandMid = (levels, i) => i + 1 < levels.length ? (levels[i] + levels[i + 1]) / 2 : levels[i] + (levels[i] - (levels[i - 1] ?? 0)) / 2;
+
 // Relief's hillshade PNG is light (flat ground sits near 180 of 255), and soft-light is neutral at mid grey, so drawn as it
 // comes it barely shows. Flat ground is moved to mid grey and the slopes stretched before the shade is composited.
 function toneHill(img, flat = 180, gain = 2.5) {
@@ -31,10 +42,12 @@ export default function basin(el, datasets, opts = {}) {
     const outlets = datasets[`${frame}_outlets`].features;
     const land = datasets[`${frame}_land`].features;
     const slope = datasets[`${frame}_slope_flow`] ? datasets[`${frame}_slope_flow`].features : [];
+    const sea = datasets[`${frame}_sea`] ? datasets[`${frame}_sea`].features : [];
+    const seaLevels = [...new Set(sea.map((f) => Math.abs(f.properties.level)))].sort((a, b) => a - b);
     const img = new Image();
     img.src = new URL(`${frame}_hillshade.png`, import.meta.url).href;
     await new Promise((res) => { img.onload = res; img.onerror = res; });
-    return (cache[frame] = { systems, rivers, outlets, land, slope, img: img.width ? toneHill(img) : null, meta: frames[frame] });
+    return (cache[frame] = { systems, rivers, outlets, land, slope, sea, seaLevels, img: img.width ? toneHill(img) : null, meta: frames[frame] });
   }
 
   const alpha = (hex, a) => { const c = d3.color(hex); if (!c) return hex; c.opacity = a; return c.formatRgb(); };
@@ -69,7 +82,9 @@ export default function basin(el, datasets, opts = {}) {
     const [px0, py1] = proj([x0, y0]), [px1, py0] = proj([x1, y1]);
     ctx.fillStyle = token("surface") || (dark ? "#1b2230" : "#eef1f4"); ctx.fillRect(0, 0, width, H);
     ctx.save(); ctx.beginPath(); ctx.rect(px0, py0, px1 - px0, py1 - py0); ctx.clip();
-    ctx.fillStyle = dark ? "rgba(24,38,58,.6)" : "rgba(170,196,222,.45)"; ctx.fillRect(px0, py0, px1 - px0, py1 - py0);
+    // the sea floor on Relief's depth scale (a flat wash where the frame has no bands), the land as a light wash
+    ctx.fillStyle = D.seaLevels.length ? seaColour(0, dark) : (dark ? "rgba(24,38,58,.6)" : "rgba(170,196,222,.45)"); ctx.fillRect(px0, py0, px1 - px0, py1 - py0);
+    for (const [i, lv] of D.seaLevels.entries()) { ctx.beginPath(); for (const f of D.sea) if (Math.abs(f.properties.level) === lv) path(f); ctx.fillStyle = seaColour(bandMid(D.seaLevels, i), dark); ctx.fill(); }
     ctx.beginPath(); for (const f of D.land) path(f); ctx.fillStyle = dark ? "rgba(255,255,255,.07)" : "rgba(255,255,255,.55)"; ctx.fill();
     // catchments
     const shown = D.systems.filter((f) => (f.properties.log10_area ?? 9) >= (state.fold ?? 0));
@@ -80,9 +95,11 @@ export default function basin(el, datasets, opts = {}) {
     if (D.img && shade > 0) { ctx.save(); ctx.globalCompositeOperation = "soft-light"; ctx.globalAlpha = Math.min(1, shade); ctx.drawImage(D.img, px0, py0, px1 - px0, py1 - py0); if (shade > 1) { ctx.drawImage(D.img, px0, py0, px1 - px0, py1 - py0); ctx.globalCompositeOperation = "multiply"; ctx.globalAlpha = (shade - 1) * 0.6; ctx.drawImage(D.img, px0, py0, px1 - px0, py1 - py0); } ctx.restore(); }
     // water
     ctx.lineCap = "round"; ctx.lineJoin = "round";
-    if (rivers === "slope") {
-      for (const f of D.slope) { ctx.beginPath(); path(f); ctx.strokeStyle = alpha(gradRamp(f.properties.mean_gradient), 0.75); ctx.lineWidth = 0.6; ctx.stroke(); }
-    } else if (rivers !== "off") {
+    // "all" is the catchment-shape view: the terrain's fall lines as fine threads under the rivers' ribbons
+    if (rivers === "slope" || rivers === "all") {
+      for (const f of D.slope) { ctx.beginPath(); path(f); ctx.strokeStyle = alpha(gradRamp(f.properties.mean_gradient), rivers === "all" ? 0.5 : 0.75); ctx.lineWidth = rivers === "all" ? 0.45 : 0.6; ctx.stroke(); }
+    }
+    if (rivers !== "off" && rivers !== "slope") {
       const sysOf = new Map(shown.map((f) => [f.properties.system, f.properties]));
       const byQ = D.rivers.filter((f) => !state.fold || sysOf.has(f.properties.system)).sort((a, b) => (a.properties.log_discharge ?? 0) - (b.properties.log_discharge ?? 0));
       for (const pass of ["glow", "core"]) for (const f of byQ) {
@@ -104,12 +121,38 @@ export default function basin(el, datasets, opts = {}) {
     legend(view, rivers, D, dark, H);
   }
 
+  // Legend, bottom left: swatches for groups, and for every ramp a bar with ticks at the values that matter (log scales are
+  // labelled in their own units), plus Relief's depth key when the frame has sea bands.
   function legend(view, rivers, D, dark, H) {
-    ctx.save(); ctx.font = "11px system-ui, sans-serif"; const x = 12; let y = H - 12;
-    const row = (col, label) => { ctx.fillStyle = col; ctx.fillRect(x, y - 9, 12, 9); ctx.fillStyle = dark ? "#e6e9ee" : "#26323d"; ctx.fillText(label, x + 18, y); y -= 15; };
+    ctx.save(); ctx.font = "11px system-ui, sans-serif"; const x = 12, ink = dark ? "#e6e9ee" : "#26323d", muted = dark ? "rgba(230,233,238,.75)" : "rgba(38,50,61,.75)"; let y = H - 12;
+    const BW = 210, BH = 11;
+    // a quiet panel behind the legend so it reads over the map; its height follows what the legend will hold
+    const nGroups = view === "group" ? Object.keys(D.meta.clusters).length : 0;
+    const panelH = (view === "group" ? nGroups * 15 : 35) + (rivers === "slope" || rivers === "all" ? 35 : 0) + (D.seaLevels.length ? 35 : 0) + 6;
+    const labelW = view === "group" ? Math.max(...Object.values(D.meta.clusters).map((c) => ctx.measureText(`${c.name} (${c.n_systems})`).width)) + 18 : 0;
+    ctx.fillStyle = dark ? "rgba(27,34,48,.78)" : "rgba(245,247,249,.82)"; ctx.fillRect(x - 7, H - 12 - panelH - 2, Math.max(BW, labelW, 240) + 14, panelH + 12);
+    const row = (col, label) => { ctx.fillStyle = col; ctx.fillRect(x, y - 9, 12, 9); ctx.fillStyle = ink; ctx.fillText(label, x + 18, y); y -= 15; };
+    const bar = (title, rampOf, ticks) => {
+      ctx.font = "10px system-ui, sans-serif"; ctx.fillStyle = muted; ctx.textAlign = "left";
+      for (const [t, l] of ticks) { const tx = x + t * BW; ctx.fillRect(tx, y - 4, 1, 4); ctx.textAlign = t < 0.05 ? "left" : t > 0.95 ? "right" : "center"; ctx.fillText(l, tx, y + 7); }
+      y -= 6; for (let i = 0; i < 30; i++) { ctx.fillStyle = rampOf(i / 29); ctx.fillRect(x + i * BW / 30, y - BH, BW / 30 + 0.5, BH); }
+      y -= BH + 3; ctx.textAlign = "left"; ctx.font = "11px system-ui, sans-serif"; ctx.fillStyle = ink; ctx.fillText(title, x, y); y -= 15;
+    };
+    const lg = (v, lo, span) => (Math.log10(v) - lo) / span;
+    if (D.seaLevels.length) {
+      const L = D.seaLevels, n = L.length; ctx.font = "10px system-ui, sans-serif"; ctx.fillStyle = muted;
+      // label every band when they fit, else every other one, always the first and the last
+      const every = n > 7 ? 2 : 1;
+      for (const [i, lv] of L.entries()) { if (i % every && i !== n - 1) continue; ctx.textAlign = i === 0 ? "left" : i === n - 1 ? "right" : "center"; ctx.fillText(lv.toLocaleString("en-GB") + (i === n - 1 ? "+" : ""), x + (i === n - 1 ? BW : i * BW / n), y + 7); }
+      y -= 6; for (const [i] of L.entries()) { ctx.fillStyle = seaColour(bandMid(L, i), dark); ctx.fillRect(x + i * BW / n, y - BH, BW / n + 0.5, BH); }
+      y -= BH + 3; ctx.textAlign = "left"; ctx.font = "11px system-ui, sans-serif"; ctx.fillStyle = ink; ctx.fillText("sea floor, depth in m (Relief)", x, y); y -= 15;
+    }
+    if (rivers === "slope" || rivers === "all") bar(rivers === "all" ? "fall lines under the rivers, colour is gradient" : "slope flow, colour is the mean gradient", (t) => gradRamp(0.08 * t), [0, 2, 4, 6, 8].map((v) => [v / 8, v + " %"]));
     if (view === "group") { const cl = Object.entries(D.meta.clusters).sort((a, b) => +a[0] - +b[0]); for (const [i, c] of cl.reverse()) row(GROUP_COLOURS[+i % GROUP_COLOURS.length], `${c.name} (${c.n_systems})`); }
-    else { const label = { quality: "sand quality proxy, 0.1 to 0.6", yield: "sediment yield, 3 to 1,000 t/km²/yr", sand: "sand supply, 0.03 to 10 Mt/yr", size: "catchment area, 1,000 to 1,000,000 km²" }[view]; const ramp = view === "quality" ? (t) => qualRamp(0.1 + 0.5 * t) : view === "size" ? (t) => sizeRamp(3 + 3 * t) : (t) => yieldRamp(0.5 + 2.5 * t); for (let i = 0; i < 10; i++) { ctx.fillStyle = ramp(i / 9); ctx.fillRect(x + i * 12, y - 9, 12, 9); } ctx.fillStyle = dark ? "#e6e9ee" : "#26323d"; ctx.fillText(label, x + 126, y); y -= 15; }
-    if (rivers === "slope") { for (let i = 0; i < 10; i++) { ctx.fillStyle = gradRamp(0.08 * i / 9); ctx.fillRect(x + i * 12, y - 9, 12, 9); } ctx.fillStyle = dark ? "#e6e9ee" : "#26323d"; ctx.fillText("slope flow, flat to 8 % gradient", x + 126, y); }
+    else if (view === "quality") bar("sand quality proxy", (t) => qualRamp(0.1 + 0.5 * t), [0.1, 0.2, 0.3, 0.4, 0.5, 0.6].map((v) => [(v - 0.1) / 0.5, v.toFixed(1)]));
+    else if (view === "yield") bar("sediment yield, t/km²/yr, log scale", (t) => yieldRamp(0.5 + 2.5 * t), [3, 10, 30, 100, 300, 1000].map((v) => [lg(v, 0.5, 2.5), v.toLocaleString("en-GB")]));
+    else if (view === "sand") bar("sand supply, Mt/yr, log scale", (t) => yieldRamp(0.5 + 2.5 * t), [0.03, 0.1, 0.3, 1, 3, 10].map((v) => [lg(v, -1.5, 2.5), String(v)]));
+    else if (view === "size") bar("catchment area, km², log scale", (t) => sizeRamp(3 + 3 * t), [1e3, 1e4, 1e5, 1e6].map((v) => [(Math.log10(v) - 3) / 3, v >= 1e6 ? "1,000,000" : v.toLocaleString("en-GB")]));
     ctx.restore();
   }
 

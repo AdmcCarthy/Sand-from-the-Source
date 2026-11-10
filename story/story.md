@@ -47,6 +47,9 @@ data:
   ne_europe_outlets: data/ne_europe_outlets.geojson
   ne_europe_land: data/ne_europe_land.geojson
   ne_europe_slope_flow: data/ne_europe_slope_flow.geojson
+  ne_europe_sea: data/ne_europe_sea.geojson
+  north_sea_sea: data/north_sea_sea.geojson
+  norwegian_sea_sea: data/norwegian_sea_sea.geojson
   north_sea_catchments: data/north_sea_catchments.geojson
   north_sea_rivers: data/north_sea_rivers.geojson
   north_sea_outlets: data/north_sea_outlets.geojson
@@ -72,17 +75,17 @@ says where today stops standing for the basins' past.
 ### The catchments of North-east Europe
 
 Each dashed area is one HydroSHEDS catchment: {{ n_systems }} whole river systems and the rest coastal groups,
-{{ area_mkm2 | round:2 }} million km² in all. Ribbons are rivers, wider with more water; dots are mouths; colour is the
-bedrock group. The smallest coastal groups are hidden so the terrain reads through.
+{{ area_mkm2 | round:2 }} million km² in all. Ribbons are rivers, wider with more water, over the fine fall lines of
+the terrain; dots are mouths; colour is the bedrock group. The sea floor is on Relief's depth scale.
 
 ```chart
 id: basin
 type: custom
 module: figures/basin.js
-data: [frames, ne_europe_catchments, ne_europe_rivers, ne_europe_outlets, ne_europe_land, ne_europe_slope_flow, north_sea_catchments, north_sea_rivers, north_sea_outlets, north_sea_land, north_sea_slope_flow, norwegian_sea_catchments, norwegian_sea_rivers, norwegian_sea_outlets, norwegian_sea_land, norwegian_sea_slope_flow]
-state: { frame: ne_europe, view: group, rivers: flow, shade: 1.5, fold: 3 }
+data: [frames, ne_europe_catchments, ne_europe_rivers, ne_europe_outlets, ne_europe_land, ne_europe_slope_flow, ne_europe_sea, north_sea_catchments, north_sea_rivers, north_sea_outlets, north_sea_land, north_sea_slope_flow, north_sea_sea, norwegian_sea_catchments, norwegian_sea_rivers, norwegian_sea_outlets, norwegian_sea_land, norwegian_sea_slope_flow, norwegian_sea_sea]
+state: { frame: ne_europe, view: group, rivers: all, shade: 1.5, fold: 3 }
 title: Shield, upland and plain feed the same seas
-subtitle: Present-day catchments and rivers on Relief terrain, coloured by bedrock group
+subtitle: Present-day catchments on Relief terrain, coloured by bedrock group; rivers as ribbons over the terrain's fall lines
 source: hydrosheds
 confidence: derived
 unit: km² (catchments), m³/s (river width)
