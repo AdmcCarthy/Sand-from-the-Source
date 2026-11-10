@@ -48,7 +48,7 @@ export default function basin(el, datasets, opts = {}) {
     const dark = (document.documentElement.dataset.colourScheme || "light") === "dark";
     const [x0, y0, x1, y1] = D.meta.relief.extent;
     const aspect = (y1 - y0) / (x1 - x0);
-    const H = opts.height ? opts.height() : Math.round(Math.min(width * aspect, window.innerHeight * (width < 600 ? 0.3 : 0.62)));
+    const H = opts.height ? opts.height() : Math.round(Math.min(width * aspect, window.innerHeight * (width < 600 ? 0.36 : 0.62)));
     const dpr = opts.pixelRatio || window.devicePixelRatio || 1;
     canvas.width = width * dpr; canvas.height = H * dpr; canvas.style.width = width + "px"; canvas.style.height = H + "px";
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);

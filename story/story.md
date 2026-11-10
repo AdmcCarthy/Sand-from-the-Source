@@ -64,10 +64,9 @@ they deliver, and says where today stops standing for the past.
 ::: step {beat=situation layout=wide}
 ### The catchments of two margins
 
-The frame is the North Sea between Norway and Britain. Each outlined area is one drainage catchment from the
-HydroSHEDS network, {{ area_mkm2 | round:2 }} million km² of land between them, {{ n_systems }} of them whole river systems and the rest coastal groups of small streams
-pooled together. The ribbons are the rivers, wider where they carry more water; the dots are their mouths. The
-colour is the group each catchment falls into by the bedrock it erodes.
+Each dashed area is one HydroSHEDS catchment: {{ n_systems }} whole river systems and the rest coastal groups,
+{{ area_mkm2 | round:2 }} million km² in all. Ribbons are rivers, wider with more water; dots are mouths; colour is the
+bedrock group.
 
 ```chart
 id: basin
@@ -86,9 +85,8 @@ exception: { rule: one hue per entity, reason: the catchment colour carries the 
 :::
 
 ::: step {beat=situation}
-Follow the fall lines instead of the rivers and the same picture emerges from the terrain alone. Each thread
-is a path of steepest descent on the Relief surface, coloured by its gradient: steep and short down the
-Norwegian fjord walls, long and shallow across the English lowlands. The rivers are where these threads gather.
+Follow the fall lines instead: each thread is a path of steepest descent on the terrain, coloured by gradient.
+Steep and short down the fjord walls, long and shallow across the lowlands. Rivers are where the threads gather.
 
 ```chart
 use: basin
@@ -103,13 +101,9 @@ subtitle: Paths of steepest descent on Relief's terrain, coloured by gradient
 ## The rock is old and hard
 
 ::: step {beat=complication}
-### Granite, gneiss and schist on one side, shale and limestone on the other
 
-On the Norwegian Sea margin {{ nor_shield | pct }} of the catchment area is granite, felsic volcanic rock, gneiss or
-quartzite, and only {{ nor_carbonate | pct }} is carbonate. These are sources of quartz and feldspar sand with
-little clay and almost no lime, the kind of source that fed the Jurassic and Paleocene sandstones offshore. The
-British side is the opposite in age: Paleozoic clastic rock, much of it shale, with Chalk and Carboniferous
-limestone where the lowlands are.
+North of Stad {{ nor_shield | pct }} of the catchment area is granite, felsic volcanics, gneiss or quartzite and
+{{ nor_carbonate | pct }} carbonate. Britain drains Paleozoic clastic rock, much of it shale.
 
 ```chart
 id: comp
@@ -119,7 +113,7 @@ label: catchment
 value: total
 part: [frac_igneous_felsic, frac_gneiss_quartzite, frac_schist, frac_igneous_mafic, frac_clastic, frac_carbonate, frac_unconsolidated, frac_other]
 parts_labels: [granite and felsic volcanics, gneiss and quartzite, schist and phyllite, mafic and metavolcanic, clastic sedimentary, carbonate, unconsolidated cover, not classified]
-title: What the eighteen largest catchments erode
+title: What the eight largest catchments erode
 subtitle: Share of mapped bedrock area by harmonised class, largest river systems first
 source: s2s
 confidence: derived
@@ -129,9 +123,8 @@ notes: Shares are of the mapped area; national maps first, the IGME 5000 where n
 :::
 
 ::: step {beat=complication}
-Group the {{ n_catchments }} catchments by what they erode and {{ n_groups }} kinds emerge: shield granite and
-gneiss, Caledonian schist and phyllite, Paleozoic clastic rock, Mesozoic and Cenozoic cover with carbonates, and
-glacial cover. The shield and Caledonian groups are the sand makers.
+Grouped by what they erode, {{ n_groups }} kinds emerge: shield granite and gneiss, Caledonian schist, Paleozoic
+clastic rock, young cover with carbonates, and glacial cover. The first two are the sand makers.
 
 ```chart
 use: basin
@@ -146,14 +139,10 @@ subtitle: The Norwegian Sea margin, catchments by bedrock group
 ## How much the rivers carry
 
 ::: step {beat=question}
-### A budget from discharge, area, relief, climate and rock
 
-A catchment's flux follows its discharge, area, relief, temperature and rock: the BQART relation of Syvitski and
-Milliman, fitted to hundreds of rivers. Applied here with today's rivers, Relief's terrain and one mean temperature
-per climate zone, the two margins supply about {{ qs_total | round:0 }} Mt of sediment a year, or about
-{{ qs_cal_total | round:0 }} Mt when scaled to what gauges on monitored rivers record. The Glomma, Norway's
-largest river, comes out at {{ glomma_qs | round:1 }} Mt a year against a monitored load of about
-{{ glomma_known | round:1 }}: within the relation's own spread.
+By the BQART relation the two margins supply about {{ qs_total | round:0 }} Mt a year, or
+{{ qs_cal_total | round:0 }} Mt scaled to gauged rivers. The Glomma: {{ glomma_qs | round:1 }} Mt against about
+{{ glomma_known | round:1 }} measured.
 
 ```chart
 id: budget
@@ -162,7 +151,7 @@ data: budget
 label: catchment
 value: qs_mt_yr
 title: A few megatonnes a year, spread thinly
-subtitle: BQART sediment flux of the eighteen largest catchments, Mt a year
+subtitle: BQART sediment flux of the twelve largest catchments, Mt a year
 source: s2s
 confidence: derived
 unit: Mt a year
@@ -171,10 +160,9 @@ notes: Relief is the catchment's highest point from Relief's 3 km elevation grid
 :::
 
 ::: step {beat=question}
-The typical yield is {{ median_yield | round:0 }} t per km² a year. For scale, the Rhine, draining the Alps,
-delivers about {{ rhine_monitored | cite:hoffmann }} Mt a year at the Dutch border. These margins are starved:
-{{ glauconite_share | pct }} of the catchments over 2,000 km² yield under the threshold where a shelf receives
-sediment slowly enough for glaucony to form.
+The typical yield is {{ median_yield | round:0 }} t per km² a year; the Rhine alone delivers about
+{{ rhine_monitored | cite:hoffmann }} Mt a year. These margins are starved: {{ glauconite_share | pct }} of the larger
+catchments yield slowly enough for glaucony to form offshore.
 
 ```chart
 use: basin
@@ -191,11 +179,9 @@ subtitle: BQART sediment yield, t per km² a year, log scale
 ::: step {beat=answer}
 ### The sand is clean and it arrives slowly
 
-Read quality from the sources: quartz and feldspar rock scores high, schist, mafic rock and mud score low,
-carbonate scores against, and cold climates keep feldspar fresh. The proxy runs from {{ quality_median | round:2 }}
-in the middle of the field to {{ quality_max | round:2 }} at best. The Norwegian shield and the Caledonian
-quartzite belts score highest; the lowland cover and the shale country score lowest. Where the proxy is high and
-the yield is low, the shelf gets clean sand slowly, which is also where glaucony is likely in the record.
+Quality read from the sources: quartz and feldspar rock scores high, schist, mafic rock and mud score low,
+carbonate counts against. The proxy runs from {{ quality_median | round:2 }} typically to {{ quality_max | round:2 }}
+at best, highest on the shield and the quartzite belts, lowest on cover and shale.
 
 ```chart
 use: basin
@@ -208,9 +194,9 @@ subtitle: Sand quality proxy by catchment, from bedrock shares, grain words and 
 :::
 
 ::: step {beat=answer}
-Sand supply is the flux times the sand-prone share: about {{ sand_total | round:0 }} Mt a year across both
-margins, {{ sand_share | pct }} of the flux. It is a small number for two margins the size of these, and it is
-the number a Jurassic or Paleocene fan would have had to live on, scaled by the relief of its time.
+Sand supply is the flux times the sand-prone share: about {{ sand_total | round:0 }} Mt a year,
+{{ sand_share | pct }} of the flux. A small number for two margins, and the one a Jurassic or Paleocene fan lived on,
+scaled by the relief of its time.
 
 ```chart
 use: basin
@@ -227,16 +213,34 @@ subtitle: BQART flux times the sand-prone share of the sources, Mt a year, log s
 ::: step {beat=support}
 ### Four breaks between the present and the basin's past
 
-Four things break the analogy. Ice: the fjords, the stripped shield and the till plains are glacial, and the last
-{{ 2.6 | param }} million years of sediment on the margin came from ice, not these rivers. Relief: southern Norway stood at
-about {{ 1.6 | cite:somme }} km in the Late Jurassic, under {{ 0.5 | cite:somme }} km in the Late Cretaceous and about {{ 1.1 | cite:somme }} km in the
-Paleocene, so the yields here are today's and not a past's. Divides: the watershed now sits near the Atlantic coast and sends most
-of Scandinavia east; in the Jurassic the hinterland drained west into the rift. Exposure: Mesozoic cover once
-lay over much of the shield margin, so the delivered sand was more recycled than the bedrock budget says.
+Ice: the fjords and till plains are glacial, and the last {{ 2.6 | param }} million years of sediment came from ice.
+Relief: southern Norway stood at about {{ 1.6 | cite:somme }} km in the Late Jurassic, under {{ 0.5 | cite:somme }} km
+in the Late Cretaceous and {{ 1.1 | cite:somme }} km in the Paleocene. Divides moved; Mesozoic cover has been stripped.
 
-What survives is the bound: a catchment on this ground cannot supply carbonate, supplies quartz and feldspar sand
-with mica where the nappes are, and supplies it slowly. That bound fits the glauconitic, clean-sand shelves of the
-margin's Cretaceous and Paleocene, and it is the frame for reading them.
+```chart
+use: basin
+frame: north_sea
+view: group
+rivers: slope
+title: Today's relief, not the past's
+subtitle: Fall lines on today's terrain; the Jurassic and Paleocene stood higher
+```
+:::
+
+::: step {beat=support}
+What survives is the bound: this ground cannot supply carbonate, gives quartz and feldspar sand with mica from
+the nappes, and gives it slowly. That fits the margin's glauconitic, clean-sand Cretaceous and Paleocene shelves.
+
+```chart
+use: basin
+frame: norwegian_sea
+view: quality
+rivers: flow
+title: The bound that survives the breaks
+subtitle: Sand quality proxy on the Norwegian Sea margin
+```
+
+:::
 
 ```table
 kind: league
@@ -250,9 +254,10 @@ columns:
   - { field: sand_supply_mt_yr, label: Sand supply, unit: Mt a year, format: round:2 }
   - { field: yield_t_km2_yr, label: Yield, unit: t per km² a year, format: int }
 sort: -area_km2
-fold: 12
+fold: 10
 title: The catchments, with their readings
 source: s2s
 confidence: derived
 ```
-:::
+
+The table lists every catchment with its readings; the page's basis of analysis gives each figure's source and confidence.

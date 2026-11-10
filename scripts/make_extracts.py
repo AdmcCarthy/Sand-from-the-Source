@@ -102,10 +102,10 @@ def main() -> None:
     allsys = allsys[[c for c in KEEP if c in allsys.columns]]
     allsys.to_csv(OUT / "catchments.csv", index=False)
     # tidy tables for the built-in charts
-    big = allsys[allsys["kind"] == "system"].sort_values("area_km2", ascending=False).head(18)
+    big = allsys[allsys["kind"] == "system"].sort_values("area_km2", ascending=False).head(12)
     parts = {"frac_igneous_felsic": "granite and felsic volcanics", "frac_gneiss_quartzite": "gneiss and quartzite", "frac_schist": "schist and phyllite",
              "frac_igneous_mafic": "mafic and metavolcanic", "frac_clastic": "clastic sedimentary", "frac_carbonate": "carbonate", "frac_unconsolidated": "unconsolidated cover", "frac_other": "not classified"}
-    wide = big[["name"] + list(parts)].rename(columns={"name": "catchment"}).copy()
+    wide = big.head(8)[["name"] + list(parts)].rename(columns={"name": "catchment"}).copy()  # eight rows read on a phone
     wide["total"] = wide[list(parts)].sum(axis=1)
     wide.to_csv(OUT / "composition.csv", index=False)  # one column per class: SubScout's bars stack the listed part columns
     bud = big[["name", "qs_mt_yr", "qs_cal_mt_yr", "sand_supply_mt_yr", "yield_t_km2_yr", "sand_quality", "glauconite_prone_shelf", "frame", "area_km2"]].rename(columns={"name": "catchment"})
