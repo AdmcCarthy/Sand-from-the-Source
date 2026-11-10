@@ -100,7 +100,8 @@ export default function basin(el, datasets, opts = {}) {
     // catchments
     const shown = D.systems.filter((f) => (f.properties.log10_area ?? 9) >= (state.fold ?? 0));
     for (const f of shown) { const c = fillOf(f.properties, view, dark); if (!c) continue; ctx.beginPath(); path(f); ctx.fillStyle = alpha(c, dark ? 0.6 : 0.55); ctx.fill(); }
-    ctx.save(); ctx.setLineDash([4, 3]); ctx.beginPath(); for (const f of shown) path(f); ctx.strokeStyle = dark ? "rgba(255,255,255,.4)" : "rgba(40,40,40,.5)"; ctx.lineWidth = 0.8; ctx.stroke(); ctx.restore();
+    // catchment divides as solid black lines (near-white on the dark scheme), firm enough to hold against the terrain
+    ctx.save(); ctx.beginPath(); for (const f of shown) path(f); ctx.strokeStyle = dark ? "rgba(255,255,255,.75)" : "rgba(0,0,0,.85)"; ctx.lineWidth = 1.3; ctx.lineJoin = "round"; ctx.stroke(); ctx.restore();
     // the hillshade sits above the fills and outlines so the terrain reads through the data; soft-light once, and above
     // strength 1 a second pass with a light multiply so ridges bite without muddying the colours
     if (D.img && shade > 0) { ctx.save(); ctx.globalCompositeOperation = "soft-light"; ctx.globalAlpha = Math.min(1, shade); ctx.drawImage(D.img, px0, py0, px1 - px0, py1 - py0); if (shade > 1) { ctx.drawImage(D.img, px0, py0, px1 - px0, py1 - py0); ctx.globalCompositeOperation = "multiply"; ctx.globalAlpha = (shade - 1) * 0.6; ctx.drawImage(D.img, px0, py0, px1 - px0, py1 - py0); } ctx.restore(); }

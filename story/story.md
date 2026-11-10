@@ -71,7 +71,7 @@ says where today stops standing for the basins' past.
 ::: step {beat=situation}
 ### The catchments of North-east Europe
 
-Each dashed area is one HydroSHEDS catchment: {{ n_systems }} whole river systems and the rest coastal groups,
+Each outlined area is one HydroSHEDS catchment: {{ n_systems }} whole river systems and the rest coastal groups,
 {{ area_mkm2 | round:2 }} million km² in all. Ribbons are rivers, wider with more water, over the fine fall lines of
 the terrain; dots are mouths; colour is the bedrock group. The sea floor is on Relief's depth scale.
 
@@ -87,7 +87,7 @@ subtitle: Present-day catchments on Relief terrain, coloured by bedrock group; r
 source: hydrosheds
 confidence: derived
 unit: km² (catchments), m³/s (river width)
-notes: Catchments are HydroBASINS level-6 sub-basins grouped into whole systems; a system under 4,000 km² is pooled with its coastal neighbours by Pfafstetter code; groups under 1,000 km² are hidden on the map but counted. Groups are k-means on bedrock class and chart age shares, named from their means. Terrain and hillshade from Relief; catchment outlines dashed so the terrain reads through.
+notes: Catchments are HydroBASINS level-6 sub-basins grouped into whole systems; a system under 4,000 km² is pooled with its coastal neighbours by Pfafstetter code; groups under 1,000 km² are hidden on the map but counted. Groups are k-means on bedrock class and chart age shares, named from their means. Terrain and hillshade from Relief; catchment divides as solid black lines.
 exception: { rule: one hue per entity, reason: the catchment colour carries the reading and the terrain beneath is context in grey }
 ```
 :::
