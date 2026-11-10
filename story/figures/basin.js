@@ -6,6 +6,16 @@ import { token, onSchemeChange } from "../runtime/js/subscout.js";
 
 const GROUP_COLOURS = ["#c8553d", "#3d6e9e", "#7a9a3b", "#b8860b", "#6b4c9a", "#2e8b8b", "#a0522d", "#5f5f5f"];
 
+// Relief's hillshade PNG is light (flat ground sits near 180 of 255), and soft-light is neutral at mid grey, so drawn as it
+// comes it barely shows. Flat ground is moved to mid grey and the slopes stretched before the shade is composited.
+function toneHill(img, flat = 180, gain = 2.5) {
+  const c = document.createElement("canvas"); c.width = img.width; c.height = img.height;
+  const x = c.getContext("2d"); x.drawImage(img, 0, 0);
+  const d = x.getImageData(0, 0, c.width, c.height), p = d.data;
+  for (let i = 0; i < p.length; i += 4) { const v = Math.max(0, Math.min(255, 128 + (p[i] - flat) * gain)); p[i] = p[i + 1] = p[i + 2] = v; }
+  x.putImageData(d, 0, 0); return c;
+}
+
 export default function basin(el, datasets, opts = {}) {
   const frames = datasets.frames.frames;
   const canvas = d3.select(el).selectAll("canvas").data([0]).join("canvas").attr("role", "img")
@@ -24,7 +34,7 @@ export default function basin(el, datasets, opts = {}) {
     const img = new Image();
     img.src = new URL(`${frame}_hillshade.png`, import.meta.url).href;
     await new Promise((res) => { img.onload = res; img.onerror = res; });
-    return (cache[frame] = { systems, rivers, outlets, land, slope, img: img.width ? img : null, meta: frames[frame] });
+    return (cache[frame] = { systems, rivers, outlets, land, slope, img: img.width ? toneHill(img) : null, meta: frames[frame] });
   }
 
   const alpha = (hex, a) => { const c = d3.color(hex); if (!c) return hex; c.opacity = a; return c.formatRgb(); };
@@ -65,7 +75,9 @@ export default function basin(el, datasets, opts = {}) {
     const shown = D.systems.filter((f) => (f.properties.log10_area ?? 9) >= (state.fold ?? 0));
     for (const f of shown) { const c = fillOf(f.properties, view, dark); if (!c) continue; ctx.beginPath(); path(f); ctx.fillStyle = alpha(c, dark ? 0.6 : 0.55); ctx.fill(); }
     ctx.save(); ctx.setLineDash([4, 3]); ctx.beginPath(); for (const f of shown) path(f); ctx.strokeStyle = dark ? "rgba(255,255,255,.4)" : "rgba(40,40,40,.5)"; ctx.lineWidth = 0.8; ctx.stroke(); ctx.restore();
-    if (D.img && shade > 0) { ctx.save(); ctx.globalCompositeOperation = "soft-light"; ctx.globalAlpha = Math.min(1, shade); ctx.drawImage(D.img, px0, py0, px1 - px0, py1 - py0); if (shade > 1) ctx.drawImage(D.img, px0, py0, px1 - px0, py1 - py0); ctx.restore(); }
+    // the hillshade sits above the fills and outlines so the terrain reads through the data; soft-light once, and above
+    // strength 1 a second pass with a light multiply so ridges bite without muddying the colours
+    if (D.img && shade > 0) { ctx.save(); ctx.globalCompositeOperation = "soft-light"; ctx.globalAlpha = Math.min(1, shade); ctx.drawImage(D.img, px0, py0, px1 - px0, py1 - py0); if (shade > 1) { ctx.drawImage(D.img, px0, py0, px1 - px0, py1 - py0); ctx.globalCompositeOperation = "multiply"; ctx.globalAlpha = (shade - 1) * 0.6; ctx.drawImage(D.img, px0, py0, px1 - px0, py1 - py0); } ctx.restore(); }
     // water
     ctx.lineCap = "round"; ctx.lineJoin = "round";
     if (rivers === "slope") {

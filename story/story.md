@@ -80,7 +80,7 @@ id: basin
 type: custom
 module: figures/basin.js
 data: [frames, ne_europe_catchments, ne_europe_rivers, ne_europe_outlets, ne_europe_land, ne_europe_slope_flow, north_sea_catchments, north_sea_rivers, north_sea_outlets, north_sea_land, north_sea_slope_flow, norwegian_sea_catchments, norwegian_sea_rivers, norwegian_sea_outlets, norwegian_sea_land, norwegian_sea_slope_flow]
-state: { frame: ne_europe, view: group, rivers: flow, shade: 0.9, fold: 3 }
+state: { frame: ne_europe, view: group, rivers: flow, shade: 1.5, fold: 3 }
 title: Shield, upland and plain feed the same seas
 subtitle: Present-day catchments and rivers on Relief terrain, coloured by bedrock group
 source: hydrosheds
