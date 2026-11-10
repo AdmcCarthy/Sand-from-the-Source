@@ -68,7 +68,7 @@ says where today stops standing for the basins' past.
 
 ## One frame, three kinds of source
 
-::: step {beat=situation layout=wide}
+::: step {beat=situation}
 ### The catchments of North-east Europe
 
 Each dashed area is one HydroSHEDS catchment: {{ n_systems }} whole river systems and the rest coastal groups,
@@ -79,6 +79,7 @@ the terrain; dots are mouths; colour is the bedrock group. The sea floor is on R
 id: basin
 type: custom
 module: figures/basin.js
+detail: high
 data: [frames, ne_europe_catchments, ne_europe_rivers, ne_europe_outlets, ne_europe_land, ne_europe_slope_flow, north_sea_catchments, north_sea_rivers, north_sea_outlets, north_sea_land, north_sea_slope_flow, norwegian_sea_catchments, norwegian_sea_rivers, norwegian_sea_outlets, norwegian_sea_land, norwegian_sea_slope_flow]
 state: { frame: ne_europe, view: group, rivers: all, shade: 1.5, fold: 3 }
 title: Shield, upland and plain feed the same seas
