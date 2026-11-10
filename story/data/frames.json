@@ -1,0 +1,322 @@
+{
+ "frames": {
+  "north_sea": {
+   "name": "North Sea: Norway and Britain face to face, Shetland between",
+   "crs": "EPSG:25832",
+   "extent": [
+    -140000,
+    6090000,
+    600000,
+    6970000
+   ],
+   "bbox": [
+    -3.409,
+    54.54,
+    10.974,
+    62.87
+   ],
+   "sinks": [
+    {
+     "name": "Viking Graben",
+     "lon": 2.5,
+     "lat": 60.5
+    },
+    {
+     "name": "Central Graben",
+     "lon": 2.5,
+     "lat": 56.8
+    },
+    {
+     "name": "East Shetland Platform",
+     "lon": 0.5,
+     "lat": 60.9
+    },
+    {
+     "name": "Norwegian Trench",
+     "lon": 4.5,
+     "lat": 58.3
+    }
+   ],
+   "clusters": {
+    "0": {
+     "name": "Granite and felsic volcanics, mainly older Proterozoic",
+     "n_systems": 3,
+     "mean": {
+      "frac_igneous_felsic": 0.71,
+      "frac_igneous_mafic": 0.047,
+      "frac_gneiss_quartzite": 0.061,
+      "frac_schist": 0.172,
+      "frac_clastic": 0.002,
+      "frac_carbonate": 0.008,
+      "frac_unconsolidated": 0.0,
+      "age_Cenozoic": 0.0,
+      "age_Mesozoic": 0.0,
+      "age_Paleozoic": 0.13,
+      "age_Neoproterozoic": 0.2,
+      "age_Older_Proterozoic": 0.657,
+      "age_Archean": 0.0
+     }
+    },
+    "1": {
+     "name": "Clastic sedimentary rocks, mainly Neoproterozoic and Paleozoic",
+     "n_systems": 5,
+     "mean": {
+      "frac_igneous_felsic": 0.116,
+      "frac_igneous_mafic": 0.094,
+      "frac_gneiss_quartzite": 0.102,
+      "frac_schist": 0.008,
+      "frac_clastic": 0.656,
+      "frac_carbonate": 0.021,
+      "frac_unconsolidated": 0.001,
+      "age_Cenozoic": 0.017,
+      "age_Mesozoic": 0.002,
+      "age_Paleozoic": 0.406,
+      "age_Neoproterozoic": 0.418,
+      "age_Older_Proterozoic": 0.001,
+      "age_Archean": 0.0
+     }
+    },
+    "2": {
+     "name": "Clastic sedimentary rocks, mainly Paleozoic",
+     "n_systems": 5,
+     "mean": {
+      "frac_igneous_felsic": 0.029,
+      "frac_igneous_mafic": 0.088,
+      "frac_gneiss_quartzite": 0.0,
+      "frac_schist": 0.0,
+      "frac_clastic": 0.714,
+      "frac_carbonate": 0.169,
+      "frac_unconsolidated": 0.0,
+      "age_Cenozoic": 0.0,
+      "age_Mesozoic": 0.081,
+      "age_Paleozoic": 0.82,
+      "age_Neoproterozoic": 0.003,
+      "age_Older_Proterozoic": 0.0,
+      "age_Archean": 0.0
+     }
+    },
+    "3": {
+     "name": "Unconsolidated cover, mainly Cenozoic",
+     "n_systems": 5,
+     "mean": {
+      "frac_igneous_felsic": 0.0,
+      "frac_igneous_mafic": 0.0,
+      "frac_gneiss_quartzite": 0.0,
+      "frac_schist": 0.0,
+      "frac_clastic": 0.008,
+      "frac_carbonate": 0.014,
+      "frac_unconsolidated": 0.166,
+      "age_Cenozoic": 0.877,
+      "age_Mesozoic": 0.002,
+      "age_Paleozoic": 0.0,
+      "age_Neoproterozoic": 0.0,
+      "age_Older_Proterozoic": 0.0,
+      "age_Archean": 0.0
+     }
+    },
+    "4": {
+     "name": "Granite and felsic volcanics, mainly older Proterozoic",
+     "n_systems": 6,
+     "mean": {
+      "frac_igneous_felsic": 0.448,
+      "frac_igneous_mafic": 0.113,
+      "frac_gneiss_quartzite": 0.1,
+      "frac_schist": 0.167,
+      "frac_clastic": 0.094,
+      "frac_carbonate": 0.077,
+      "frac_unconsolidated": 0.002,
+      "age_Cenozoic": 0.0,
+      "age_Mesozoic": 0.0,
+      "age_Paleozoic": 0.168,
+      "age_Neoproterozoic": 0.144,
+      "age_Older_Proterozoic": 0.515,
+      "age_Archean": 0.0
+     }
+    }
+   },
+   "budget": {
+    "catchments": 24,
+    "total_qs_mt_yr": 4.084701992191863,
+    "total_sand_mt_yr": 2.9714894122098174,
+    "median_yield_t_km2_yr": 13.272531293774051,
+    "glauconite_prone": 7,
+    "calibration_factor": 2.0384689588506975,
+    "calibration_basis": "median of 1 monitored rivers in this frame (Glomma)",
+    "total_qs_cal_mt_yr": 2.0038087773947977,
+    "total_sand_cal_mt_yr": 1.457706480791919
+   },
+   "checks": [
+    {
+     "river": "Glomma",
+     "known_mt_yr": 0.4,
+     "model_mt_yr": 0.8153875835402791,
+     "ratio_model_over_known": 2.0384689588506975,
+     "q_source": "HydroRIVERS mouth reach",
+     "relief_km": 2.212,
+     "temp_c": -0.0297850837250897,
+     "L": 0.8775844051769588,
+     "basis": "order 0.3 to 0.6 Mt/yr (Bogen, NVE), figure from memory, to be checked"
+    }
+   ],
+   "built": "2026-11-10T07:58:18+00:00",
+   "relief": {
+    "extent": [
+     -140000,
+     6090000,
+     600000,
+     6970000
+    ],
+    "crs": "EPSG:25832",
+    "cell_m": 900
+   }
+  },
+  "norwegian_sea": {
+   "name": "Norwegian Sea margin: Norway north of Stad, Sweden and Finland north of 61",
+   "crs": "+proj=lcc +lat_1=62 +lat_2=70 +lat_0=66 +lon_0=8 +x_0=0 +y_0=0 +ellps=GRS80 +units=m +no_defs",
+   "extent": [
+    -590000,
+    -510000,
+    480000,
+    490000
+   ],
+   "bbox": [
+    -7.435,
+    60.946,
+    20.645,
+    70.41
+   ],
+   "sinks": [
+    {
+     "name": "Norwegian Sea",
+     "lon": 2.0,
+     "lat": 66.0
+    },
+    {
+     "name": "Gulf of Bothnia",
+     "lon": 20.0,
+     "lat": 63.5
+    }
+   ],
+   "clusters": {
+    "0": {
+     "name": "Schist and phyllite, mainly older Proterozoic",
+     "n_systems": 4,
+     "mean": {
+      "frac_igneous_felsic": 0.411,
+      "frac_igneous_mafic": 0.048,
+      "frac_gneiss_quartzite": 0.0,
+      "frac_schist": 0.521,
+      "frac_clastic": 0.018,
+      "frac_carbonate": 0.002,
+      "frac_unconsolidated": 0.0,
+      "age_Cenozoic": 0.0,
+      "age_Mesozoic": 0.001,
+      "age_Paleozoic": 0.039,
+      "age_Neoproterozoic": 0.001,
+      "age_Older_Proterozoic": 0.883,
+      "age_Archean": 0.0
+     }
+    },
+    "1": {
+     "name": "Granite and felsic volcanics with schist and phyllite, mainly Paleozoic and older Proterozoic",
+     "n_systems": 9,
+     "mean": {
+      "frac_igneous_felsic": 0.295,
+      "frac_igneous_mafic": 0.097,
+      "frac_gneiss_quartzite": 0.218,
+      "frac_schist": 0.218,
+      "frac_clastic": 0.055,
+      "frac_carbonate": 0.117,
+      "frac_unconsolidated": 0.0,
+      "age_Cenozoic": 0.0,
+      "age_Mesozoic": 0.0,
+      "age_Paleozoic": 0.251,
+      "age_Neoproterozoic": 0.099,
+      "age_Older_Proterozoic": 0.239,
+      "age_Archean": 0.0
+     }
+    },
+    "2": {
+     "name": "Granite and felsic volcanics with schist and phyllite, mainly older Proterozoic",
+     "n_systems": 2,
+     "mean": {
+      "frac_igneous_felsic": 0.396,
+      "frac_igneous_mafic": 0.174,
+      "frac_gneiss_quartzite": 0.082,
+      "frac_schist": 0.224,
+      "frac_clastic": 0.091,
+      "frac_carbonate": 0.032,
+      "frac_unconsolidated": 0.0,
+      "age_Cenozoic": 0.0,
+      "age_Mesozoic": 0.0,
+      "age_Paleozoic": 0.125,
+      "age_Neoproterozoic": 0.012,
+      "age_Older_Proterozoic": 0.483,
+      "age_Archean": 0.101
+     }
+    },
+    "3": {
+     "name": "Granite and felsic volcanics, mainly older Proterozoic",
+     "n_systems": 12,
+     "mean": {
+      "frac_igneous_felsic": 0.611,
+      "frac_igneous_mafic": 0.173,
+      "frac_gneiss_quartzite": 0.008,
+      "frac_schist": 0.133,
+      "frac_clastic": 0.071,
+      "frac_carbonate": 0.003,
+      "frac_unconsolidated": 0.0,
+      "age_Cenozoic": 0.083,
+      "age_Mesozoic": 0.0,
+      "age_Paleozoic": 0.028,
+      "age_Neoproterozoic": 0.017,
+      "age_Older_Proterozoic": 0.779,
+      "age_Archean": 0.0
+     }
+    },
+    "4": {
+     "name": "Schist and phyllite with clastic sedimentary rocks, mainly older Proterozoic and Paleozoic",
+     "n_systems": 5,
+     "mean": {
+      "frac_igneous_felsic": 0.245,
+      "frac_igneous_mafic": 0.088,
+      "frac_gneiss_quartzite": 0.05,
+      "frac_schist": 0.34,
+      "frac_clastic": 0.247,
+      "frac_carbonate": 0.029,
+      "frac_unconsolidated": 0.002,
+      "age_Cenozoic": 0.0,
+      "age_Mesozoic": 0.0,
+      "age_Paleozoic": 0.287,
+      "age_Neoproterozoic": 0.092,
+      "age_Older_Proterozoic": 0.315,
+      "age_Archean": 0.0
+     }
+    }
+   },
+   "budget": {
+    "catchments": 32,
+    "total_qs_mt_yr": 6.31180553562136,
+    "total_sand_mt_yr": 5.060012369815576,
+    "median_yield_t_km2_yr": 11.268138395134436,
+    "glauconite_prone": 12,
+    "calibration_factor": 2.5,
+    "calibration_basis": "no monitored river in this frame; the median factor of the North-east Europe frame is used",
+    "total_qs_cal_mt_yr": 2.524722214248544,
+    "total_sand_cal_mt_yr": 2.0240049479262305
+   },
+   "checks": [],
+   "built": "2026-11-10T07:58:34+00:00",
+   "relief": {
+    "extent": [
+     -590000,
+     -510000,
+     480000,
+     490000
+    ],
+    "crs": "+proj=lcc +lat_1=62 +lat_2=70 +lat_0=66 +lon_0=8 +x_0=0 +y_0=0 +ellps=GRS80 +units=m +no_defs",
+    "cell_m": 1000
+   }
+  }
+ }
+}
