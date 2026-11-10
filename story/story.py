@@ -6,18 +6,30 @@ from subscout import metric
 S2S = "s2s"
 HYDRO = "hydrosheds"
 HOFF = "hoffmann"
+TERRAINS = ["Britain and Ireland", "Norway", "Sweden and Finland", "Continental lowlands"]
 
 
 def datasets(d):
     c = d["catchments"]
+    comp = d["compare"].copy()
+    comp = comp[comp["terrain"].isin(TERRAINS)].set_index("terrain").loc[[t for t in TERRAINS if t in set(comp["terrain"])]].reset_index()
+    comp["yield_label"] = comp["terrain"]
+    comp["quality_pct"] = comp["quality_area_weighted"] * 100
+    comp["sand_share_pct"] = comp["sand_share"] * 100
+    comp["shield_pct"] = comp["shield_share"] * 100
+    comp["clastic_pct"] = comp["clastic_share"] * 100
+    comp["carbonate_pct"] = comp["carbonate_share"] * 100
+    comp["cover_pct"] = comp["cover_share"] * 100
+    comp["mud_pct"] = comp["mud_share"] * 100
+    comp["other_pct"] = (100 - comp["shield_pct"] - comp["clastic_pct"] - comp["carbonate_pct"] - comp["cover_pct"]).clip(lower=0)
+    comp["total_pct"] = comp["shield_pct"] + comp["clastic_pct"] + comp["carbonate_pct"] + comp["cover_pct"] + comp["other_pct"]
     sys_ = c[c.kind == "system"].copy()
-    sys_["label"] = sys_["name"]
-    grp = c.groupby("cluster_name", dropna=True).agg(n=("system", "size"), area=("area_km2", "sum"), qs=("qs_mt_yr", "sum"),
-                                                     sand=("sand_supply_mt_yr", "sum"), quality=("sand_quality", "mean")).reset_index()
-    grp["sand_share"] = grp["sand"] / grp["qs"]
-    yields = sys_.sort_values("yield_t_km2_yr", ascending=False)[["label", "yield_t_km2_yr", "glauconite_prone_shelf", "frame"]].copy()
-    yields["flag"] = yields["glauconite_prone_shelf"].map({True: "low supply", False: ""})
-    return {"groups": grp, "yields": yields.head(30)}
+    return {"compare_t": comp, "systems": sys_}
+
+
+def _t(d, terrain, col):
+    comp = d["compare"].set_index("terrain")
+    return float(comp.loc[terrain, col]) if terrain in comp.index else 0.0
 
 
 def metrics(d):
@@ -29,11 +41,10 @@ def metrics(d):
     sand = c["sand_supply_mt_yr"].sum()
     big = c[c.area_km2 > 2000]
     glomma = c[c.name == "Glomma"].iloc[0] if (c.name == "Glomma").any() else None
-    nor = c[c.frame == "norwegian_sea"]
-    checks = f["north_sea"]["checks"]
-    glomma_known = next((x["known_mt_yr"] for x in checks if x["river"] == "Glomma"), None)
-    return {
-        "n_catchments": metric(len(c), "Catchments (river systems over 4,000 km² and coastal groups) on the North Sea and Norwegian Sea frames", source=HYDRO, confidence="observed"),
+    checks = f["ne_europe"]["checks"] if "ne_europe" in f else f["north_sea"]["checks"]
+    known = {x["river"]: x for x in checks}
+    m = {
+        "n_catchments": metric(len(c), "Catchments (river systems over 4,000 km² and coastal groups) on the North-east Europe, North Sea and Norwegian Sea frames, each counted once", source=HYDRO, confidence="observed"),
         "n_systems": metric(len(sys_), "River systems among them", source=HYDRO, confidence="observed"),
         "area_mkm2": metric(c["area_km2"].sum() / 1e6, "Total catchment area, million km²", source=HYDRO, confidence="observed"),
         "qs_total": metric(qs, "BQART sediment flux summed over the catchments, Mt a year", source=S2S, confidence="derived"),
@@ -43,12 +54,26 @@ def metrics(d):
         "median_yield": metric(c["yield_t_km2_yr"].median(), "Median sediment yield of the catchments, t per km² a year (BQART)", source=S2S, confidence="derived"),
         "glauconite_share": metric(big["glauconite_prone_shelf"].mean(), "Share of catchments over 2,000 km² whose yield is under 10 t per km² a year", source=S2S, confidence="interpreted"),
         "glomma_qs": metric(float(glomma["qs_mt_yr"]) if glomma is not None else 0, "BQART flux for the Glomma, Mt a year", source=S2S, confidence="derived"),
-        "glomma_known": metric(glomma_known or 0, "Monitored Glomma load used for the check, Mt a year (order of magnitude, from the NVE record)", source=S2S, confidence="observed"),
-        "nor_shield": metric((nor["frac_igneous_felsic"] + nor["frac_gneiss_quartzite"]).mul(nor["area_km2"]).sum() / nor["area_km2"].sum(),
-                             "Area-weighted share of granite, felsic volcanics, gneiss and quartzite in the Norwegian Sea catchments", source=S2S, confidence="derived"),
-        "nor_carbonate": metric(nor["frac_carbonate"].mul(nor["area_km2"]).sum() / nor["area_km2"].sum(), "Area-weighted carbonate share, Norwegian Sea catchments", source=S2S, confidence="derived"),
+        "glomma_known": metric(known.get("Glomma", {}).get("known_mt_yr", 0), "Monitored Glomma load used for the check, Mt a year (order of magnitude, from the NVE record)", source=S2S, confidence="observed"),
+        "rhine_qs": metric(known.get("Rhine", {}).get("model_mt_yr", 0), "BQART flux for the Rhine within the frame, Mt a year", source=S2S, confidence="derived"),
+        "rhine_ratio": metric(known.get("Rhine", {}).get("ratio_model_over_known", 0), "Rhine model flux over monitored load", source=S2S, confidence="derived"),
+        "n_groups": metric(c["cluster_name"].nunique(), "Composition groups found by k-means", source=S2S, confidence="derived"),
         "quality_max": metric(c["sand_quality"].max(), "Highest sand quality proxy among the catchments", source=S2S, confidence="derived"),
         "quality_median": metric(c["sand_quality"].median(), "Median sand quality proxy", source=S2S, confidence="derived"),
-        "n_groups": metric(c["cluster_name"].nunique(), "Composition groups found by k-means", source=S2S, confidence="derived"),
         "rhine_monitored": metric(1.0, "Monitored Rhine load at the German-Dutch border, Mt a year, near a natural baseline of about 1 Mt a year", source=HOFF, confidence="observed"),
     }
+    for key, terrain in (("brit", "Britain and Ireland"), ("nor", "Norway"), ("swe", "Sweden and Finland"), ("low", "Continental lowlands")):
+        m[f"{key}_yield"] = metric(_t(d, terrain, "yield_median"), f"Median BQART yield, {terrain}, t per km² a year", source=S2S, confidence="derived")
+        m[f"{key}_quality"] = metric(_t(d, terrain, "quality_area_weighted"), f"Area-weighted sand quality proxy, {terrain}", source=S2S, confidence="derived")
+        m[f"{key}_sand_share"] = metric(_t(d, terrain, "sand_share"), f"Sand share of the flux, {terrain}", source=S2S, confidence="derived")
+        m[f"{key}_shield"] = metric(_t(d, terrain, "shield_share"), f"Area share of granite, felsic volcanics, gneiss and quartzite, {terrain}", source=S2S, confidence="derived")
+        m[f"{key}_clastic"] = metric(_t(d, terrain, "clastic_share"), f"Area share of clastic sedimentary rock, {terrain}", source=S2S, confidence="derived")
+        m[f"{key}_carbonate"] = metric(_t(d, terrain, "carbonate_share"), f"Area share of carbonate rock, {terrain}", source=S2S, confidence="derived")
+        m[f"{key}_cover"] = metric(_t(d, terrain, "cover_share"), f"Area share of unconsolidated cover, {terrain}", source=S2S, confidence="derived")
+        m[f"{key}_mud"] = metric(_t(d, terrain, "mud_share"), f"Area share of mud-prone clastic rock (shale, mudstone, slate, marl), {terrain}", source=S2S, confidence="derived")
+        m[f"{key}_mixed"] = metric(_t(d, terrain, "mixed_share"), f"Area share of clastic rock mapped as sandstone with mudstone or siltstone, {terrain}", source=S2S, confidence="derived")
+        m[f"{key}_schist"] = metric(_t(d, terrain, "schist_share"), f"Area share of schist and phyllite, {terrain}", source=S2S, confidence="derived")
+        m[f"{key}_mafic"] = metric(_t(d, terrain, "mafic_share"), f"Area share of mafic and metavolcanic rock, {terrain}", source=S2S, confidence="derived")
+        m[f"{key}_qs"] = metric(_t(d, terrain, "qs_mt_yr"), f"BQART flux summed, {terrain}, Mt a year", source=S2S, confidence="derived")
+        m[f"{key}_n"] = metric(int(_t(d, terrain, "n")), f"Catchments, {terrain}", source=HYDRO, confidence="observed")
+    return m

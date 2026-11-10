@@ -1,5 +1,5 @@
-// The North Sea margins as a source-to-sink frame: Relief hillshade, the land, catchments coloured by one of several
-// readings (composition group, sand quality, yield, sand supply), flow lines as tapered ribbons by discharge, outlets.
+// North-east Europe and its margins as source-to-sink frames: Relief hillshade, the land, catchments coloured by one of
+// several readings (composition group, sand quality, yield, sand supply, size), flow lines as tapered ribbons by discharge, outlets.
 // Coordinates are the frame CRS in metres (d3.geoIdentity, y reflected). Hillshade and land come with the figure;
 // the catchments, rivers and outlets are the story's datasets.
 import { token, onSchemeChange } from "../runtime/js/subscout.js";
@@ -31,6 +31,7 @@ export default function basin(el, datasets, opts = {}) {
   const qualRamp = d3.scaleSequential(d3.interpolateYlGnBu).domain([0.1, 0.6]);
   const yieldRamp = d3.scaleSequential(d3.interpolateYlOrBr).domain([0.5, 3]);
   const gradRamp = d3.scaleSequential(d3.interpolateViridis).domain([0, 0.08]);
+  const sizeRamp = d3.scaleSequential(d3.interpolatePuBuGn).domain([3, 6]);
 
   function fillOf(p, view, dark) {
     if (p.mapped_frac == null || p.mapped_frac < 0.5) return dark ? "rgba(90,96,106,.5)" : "rgba(200,203,208,.55)";
@@ -38,6 +39,7 @@ export default function basin(el, datasets, opts = {}) {
     if (view === "quality") return qualRamp(p.sand_quality ?? 0);
     if (view === "yield") return yieldRamp(Math.log10(Math.max(1, p.yield_t_km2_yr ?? 1)));
     if (view === "sand") return yieldRamp(Math.log10(Math.max(0.001, p.sand_supply_mt_yr ?? 0.001)) + 2);
+    if (view === "size") return sizeRamp(p.log10_area ?? 3);
     return null;
   }
 
@@ -94,13 +96,14 @@ export default function basin(el, datasets, opts = {}) {
     ctx.save(); ctx.font = "11px system-ui, sans-serif"; const x = 12; let y = H - 12;
     const row = (col, label) => { ctx.fillStyle = col; ctx.fillRect(x, y - 9, 12, 9); ctx.fillStyle = dark ? "#e6e9ee" : "#26323d"; ctx.fillText(label, x + 18, y); y -= 15; };
     if (view === "group") { const cl = Object.entries(D.meta.clusters).sort((a, b) => +a[0] - +b[0]); for (const [i, c] of cl.reverse()) row(GROUP_COLOURS[+i % GROUP_COLOURS.length], `${c.name} (${c.n_systems})`); }
-    else { const label = { quality: "sand quality proxy, 0.1 to 0.6", yield: "sediment yield, 3 to 1,000 t/km²/yr", sand: "sand supply, 0.03 to 10 Mt/yr" }[view]; const ramp = view === "quality" ? (t) => qualRamp(0.1 + 0.5 * t) : (t) => yieldRamp(0.5 + 2.5 * t); for (let i = 0; i < 10; i++) { ctx.fillStyle = ramp(i / 9); ctx.fillRect(x + i * 12, y - 9, 12, 9); } ctx.fillStyle = dark ? "#e6e9ee" : "#26323d"; ctx.fillText(label, x + 126, y); y -= 15; }
+    else { const label = { quality: "sand quality proxy, 0.1 to 0.6", yield: "sediment yield, 3 to 1,000 t/km²/yr", sand: "sand supply, 0.03 to 10 Mt/yr", size: "catchment area, 1,000 to 1,000,000 km²" }[view]; const ramp = view === "quality" ? (t) => qualRamp(0.1 + 0.5 * t) : view === "size" ? (t) => sizeRamp(3 + 3 * t) : (t) => yieldRamp(0.5 + 2.5 * t); for (let i = 0; i < 10; i++) { ctx.fillStyle = ramp(i / 9); ctx.fillRect(x + i * 12, y - 9, 12, 9); } ctx.fillStyle = dark ? "#e6e9ee" : "#26323d"; ctx.fillText(label, x + 126, y); y -= 15; }
     if (rivers === "slope") { for (let i = 0; i < 10; i++) { ctx.fillStyle = gradRamp(0.08 * i / 9); ctx.fillRect(x + i * 12, y - 9, 12, 9); } ctx.fillStyle = dark ? "#e6e9ee" : "#26323d"; ctx.fillText("slope flow, flat to 8 % gradient", x + 126, y); }
     ctx.restore();
   }
 
   function lonlat(crs) {
     if (crs === "EPSG:25832") { const d = Math.PI / 180, a = 6378137, f = 1 / 298.257222101, k0 = 0.9996, e2 = f * (2 - f), ep2 = e2 / (1 - e2); return (lon, lat) => { const p = lat * d, l = (lon - 9) * d, N = a / Math.sqrt(1 - e2 * Math.sin(p) ** 2), T = Math.tan(p) ** 2, C = ep2 * Math.cos(p) ** 2, A = Math.cos(p) * l; const M = a * ((1 - e2 / 4 - 3 * e2 * e2 / 64) * p - (3 * e2 / 8 + 3 * e2 * e2 / 32) * Math.sin(2 * p) + (15 * e2 * e2 / 256) * Math.sin(4 * p)); return [500000 + k0 * N * (A + (1 - T + C) * A ** 3 / 6), k0 * (M + N * Math.tan(p) * (A * A / 2 + (5 - T + 9 * C) * A ** 4 / 24))]; }; }
+    if (crs === "EPSG:3035") { const R = 6371007.181, d = Math.PI / 180, p0 = 52 * d, l0 = 10 * d; return (lon, lat) => { const p = lat * d, l = lon * d - l0, k = Math.sqrt(2 / (1 + Math.sin(p0) * Math.sin(p) + Math.cos(p0) * Math.cos(p) * Math.cos(l))); return [4321000 + R * k * Math.cos(p) * Math.sin(l), 3210000 + R * k * (Math.cos(p0) * Math.sin(p) - Math.sin(p0) * Math.cos(p) * Math.cos(l))]; }; }
     if (crs.includes("+proj=lcc")) { const R = 6371007.181, d = Math.PI / 180, p1 = 62 * d, p2 = 70 * d, p0 = 66 * d, l0 = 8 * d; const n = Math.log(Math.cos(p1) / Math.cos(p2)) / Math.log(Math.tan(Math.PI / 4 + p2 / 2) / Math.tan(Math.PI / 4 + p1 / 2)); const F = Math.cos(p1) * Math.pow(Math.tan(Math.PI / 4 + p1 / 2), n) / n, r0 = R * F / Math.pow(Math.tan(Math.PI / 4 + p0 / 2), n); return (lon, lat) => { const r = R * F / Math.pow(Math.tan(Math.PI / 4 + lat * d / 2), n), th = n * (lon * d - l0); return [r * Math.sin(th), r0 - r * Math.cos(th)]; }; }
     return null;
   }

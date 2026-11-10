@@ -11,6 +11,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import geopandas as gpd
 import pandas as pd
 from PIL import Image
 import shapely
@@ -19,7 +20,7 @@ ROOT = Path(__file__).resolve().parents[1]
 S2S = ROOT.parent / "source-to-sink" / "data" / "derived"
 RELIEF = ROOT.parent / "Relief" / "data" / "out"
 OUT = ROOT / "story" / "data"
-FRAMES = ["north_sea", "norwegian_sea"]
+FRAMES = ["ne_europe", "north_sea", "norwegian_sea"]
 KEEP = ["system", "name", "kind", "frame", "area_km2", "size_class", "cluster", "cluster_name", "mapped_frac", "composition_source",
         "sand_quality", "sand_share", "qs_mt_yr", "qs_cal_mt_yr", "sand_supply_mt_yr", "sand_cal_mt_yr", "yield_t_km2_yr", "relief_max_m",
         "temp_c", "q_km3_yr", "q_source", "lithology_factor", "glauconite_prone_shelf", "discharge_cms", "mainstem_km",
@@ -100,6 +101,46 @@ def main() -> None:
                                   "relief": {"extent": man["extent"], "crs": man["crs"], "cell_m": man["lods"]["regional"]["cell"]}}
     allsys = pd.concat(frames, ignore_index=True)
     allsys = allsys[[c for c in KEEP if c in allsys.columns]]
+    # source terrain by catchment centroid: Britain and Ireland, Norway, Sweden and Finland, the continental lowlands
+    cents = {}
+    for fr in FRAMES:
+        g = gpd.read_parquet(S2S / fr / "systems.parquet")[["system", "geometry"]].to_crs(4326)
+        for sid, c in zip(g["system"].astype(str), g.geometry.centroid):
+            cents.setdefault((fr, sid), (c.x, c.y))
+    def terrain(row):
+        lon, lat = cents.get((row["frame"], str(row["system"])), (None, None))
+        name = str(row["name"])
+        if lon is None:
+            return "unplaced"
+        if "outside the frame" in name or "Black Sea" in name or "Mediterranean" in name:
+            return "Beyond the frame"
+        if lon < 2.5 and 49.5 <= lat < 61.5:
+            return "Britain and Ireland"
+        if lat < 49.5 and lon < 8:
+            return "France"
+        # the Scandinavian divide runs north-east from Trøndelag: Norway lies west of it
+        if lat >= 57.5 and lon < 12.5 or lat >= 63 and lon < 12 + (lat - 63) * 1.9:
+            return "Norway"
+        if lat >= 55.3 and 12.5 <= lon < 32 and (lat >= 60 or lon < 19.5):
+            return "Sweden and Finland"
+        return "Continental lowlands"
+    allsys["terrain"] = allsys.apply(terrain, axis=1)
+    # the same catchment can sit on two frames: keep one row per system for the tables, preferring the NE Europe frame
+    allsys = allsys.sort_values("frame", key=lambda c: c.map({"ne_europe": 0, "north_sea": 1, "norwegian_sea": 2})).drop_duplicates("system")
+    comp = allsys.groupby("terrain").apply(lambda d: pd.Series({
+        "n": len(d), "area_km2": d["area_km2"].sum(), "qs_mt_yr": d["qs_mt_yr"].sum(), "sand_supply_mt_yr": d["sand_supply_mt_yr"].sum(),
+        "sand_share": d["sand_supply_mt_yr"].sum() / max(d["qs_mt_yr"].sum(), 1e-9),
+        "yield_median": d["yield_t_km2_yr"].median(), "quality_area_weighted": (d["sand_quality"] * d["area_km2"]).sum() / d["area_km2"].sum(),
+        "shield_share": ((d["frac_igneous_felsic"] + d["frac_gneiss_quartzite"]) * d["area_km2"]).sum() / d["area_km2"].sum(),
+        "clastic_share": (d["frac_clastic"] * d["area_km2"]).sum() / d["area_km2"].sum(),
+        "carbonate_share": (d["frac_carbonate"] * d["area_km2"]).sum() / d["area_km2"].sum(),
+        "cover_share": (d["frac_unconsolidated"] * d["area_km2"]).sum() / d["area_km2"].sum(),
+        "mud_share": (d["grain_clastic_mud"] * d["area_km2"]).sum() / d["area_km2"].sum(),
+        "mixed_share": (d["grain_clastic_mixed"] * d["area_km2"]).sum() / d["area_km2"].sum(),
+        "schist_share": (d["frac_schist"] * d["area_km2"]).sum() / d["area_km2"].sum(),
+        "mafic_share": (d["frac_igneous_mafic"] * d["area_km2"]).sum() / d["area_km2"].sum(),
+    })).reset_index()
+    comp.to_csv(OUT / "compare.csv", index=False)
     allsys.to_csv(OUT / "catchments.csv", index=False)
     # tidy tables for the built-in charts
     big = allsys[allsys["kind"] == "system"].sort_values("area_km2", ascending=False).head(12)
@@ -111,7 +152,7 @@ def main() -> None:
     bud = big[["name", "qs_mt_yr", "qs_cal_mt_yr", "sand_supply_mt_yr", "yield_t_km2_yr", "sand_quality", "glauconite_prone_shelf", "frame", "area_km2"]].rename(columns={"name": "catchment"})
     bud.to_csv(OUT / "budget.csv", index=False)
     (OUT / "frames.json").write_text(json.dumps(manifest, indent=1), encoding="utf-8")
-    print(f"{len(allsys)} catchments, {len(big)} in the charts; files:", sorted(p.name for p in OUT.iterdir()))
+    print(f"{len(allsys)} catchments, {len(big)} in the charts; terrains {allsys['terrain'].value_counts().to_dict()}; files:", sorted(p.name for p in OUT.iterdir()))
 
 
 if __name__ == "__main__":

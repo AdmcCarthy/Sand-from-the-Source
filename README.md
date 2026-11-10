@@ -1,21 +1,26 @@
 # Sand from the Source
 
-A SubScout data story about where the North Sea's sand comes from today: the drainage catchments of Norway, Sweden, Britain, Ireland and Denmark, what bedrock they erode, how much sediment they can deliver and how clean the sand should be, and where the present day stops standing for the basin's past.
+A SubScout data story about where North-east Europe's sand comes from today: the drainage catchments of Norway, Sweden and Finland, Britain and Ireland and the continental lowlands, what bedrock they erode, how much sediment they can deliver, how clean the sand should be, how the four terrains compare, and where the present day stops standing for the basins' past.
 
-Live page: https://admccarthy.github.io/Sand-from-the-Source/ (after the first Pages deploy).
+Live at https://admccarthy.github.io/Sand-from-the-Source/ once Pages has deployed.
 
-## Thesis
+## The argument
 
-Reservoir sand is somebody's hillside. Around the North Sea the hillsides are old, hard and carbonate-free, and the rivers are small: the margin is a slow, clean supplier of quartz and feldspar sand. A BQART budget on today's catchments puts the two margins at a few tens of megatonnes a year, with yields an order of magnitude below Alpine rivers, which is the frame in which the glauconitic, clean-sand shelves of the Cretaceous and Paleocene make sense. Ice, relief, divides and exposure all differed in the past, so the present composition is a bound, not a reconstruction.
+Reservoir sand is somebody's hillside. North-east Europe holds three kinds within one frame: the Norwegian shield with its Caledonian nappes, the Paleozoic and Mesozoic layered rock of Britain and Ireland, and the glacial plains that drain to the southern North Sea and the Baltic. A BQART budget on today's catchments gives Norway and the flat shield the lowest yields and the cleanest sand-to-mud ratio, Britain the highest yield per square kilometre and the most mud, and the lowlands the largest rivers. A quality proxy read from the sources puts Norway and Britain both low, for opposite reasons: the nappes' schist and mafic rock and a cold that delivers fresh feldspar on one side, interbedded sandstone and mudstone with carbonate on the other. Ice, relief, divides and exposure all differed in the past, so the present composition is a bound, not a reconstruction.
 
-## How it is built
+## Layout
 
-- `scripts/make_extracts.py` writes the small public extracts in `story/data/` from the author's private pipelines (`europe-gis-data`, `geology-map-processing`, `source-to-sink`) and from Relief's terrain products. Only sources open for public display are used; see `DATA-LICENCE.md`.
-- `story/story.md` is the narrative; `story/story.py` computes every number in it; `story/figures/basin.js` is the map on Relief terrain.
-- Build: `uv run --project ../SubScout subscout build story --out _site`. GitHub Pages builds the same way from `.github/workflows/pages.yml`.
+- `story/story.md`: the narrative, every number a `{{ metric }}`.
+- `story/story.py`: metrics with method, source and confidence; the per-terrain comparison table.
+- `story/figures/basin.js`: the map, on Relief's hillshade for the North-east Europe, North Sea and Norwegian Sea frames.
+- `story/data/`: small extracts (CSV, GeoJSON) written by `scripts/make_extracts.py` from the private `source-to-sink` repo. `compare.csv` holds the per-terrain totals.
+- `DATA-LICENCE.md`: the terms of every source and the attribution lines the page prints.
 
-## Confidence
+## Build
 
-Observed: HydroSHEDS drainage, the surveys' maps, Relief terrain. Derived: bedrock shares, the BQART flux, the sand quality and sand share proxies, the groups. Interpreted: the glauconite reading and everything said about the past. The page's basis of analysis lists each figure's source and confidence.
+```
+uv run --project ../SubScout subscout build story --out _site
+python ../SubScout/scripts/readability.py _site
+```
 
-Licence: MIT with Acknowledgement for the code and text (`LICENSE`); the data keeps its publishers' terms (`DATA-LICENCE.md`).
+The extracts are rebuilt with `uv run --project ../source-to-sink python scripts/make_extracts.py` when the pipeline changes.
