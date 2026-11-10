@@ -1,8 +1,8 @@
 ---
 title: Sand from the Source
 short_title: Sand from the Source
-dek: Every sandstone in a basin was once a hillside. Around the North Sea three kinds of hillside feed the basins today, and they do not supply the same sand.
-kicker: NORTH-EAST EUROPE · BRITAIN, NORWAY AND THE LOWLANDS COMPARED
+dek: Every sandstone in a basin was once a hillside. Across Europe, and around the North Sea in particular, different hillsides feed the basins today, and they do not supply the same sand.
+kicker: EUROPE · THE NORTH SEA'S THREE SOURCES AGAINST THE REST
 byline: Adam McCarthy
 date: 2026-11-10
 arc: scqa
@@ -12,7 +12,7 @@ surface: nordic-cool
 units: sm3
 horizon: true
 kpis:
-  - { metric: n_catchments, label: catchments on three frames }
+  - { metric: n_catchments, label: catchments across Europe }
   - { metric: qs_total, label: "Mt of sediment a year, estimated", filter: round:0 }
   - { metric: nor_quality, label: "sand quality proxy, Norway", filter: round:2 }
   - { metric: brit_quality, label: "sand quality proxy, Britain and Ireland", filter: round:2 }
@@ -21,7 +21,7 @@ sources:
     name: HydroSHEDS, HydroBASINS and HydroRIVERS v1 (Lehner and Grill 2013)
     url: "https://www.hydrosheds.org"
     accessed: 2026-11-10
-    note: "Lehner, B., Grill G. (2013): Global river hydrography and network routing: baseline data and new approaches to study the world's large river systems. Hydrological Processes 27(15). Catchments grouped and summarised by the author."
+    note: "Lehner, B., Grill G. (2013): Global river hydrography and network routing: baseline data and new approaches to study the world's large river systems. Hydrological Processes 27(15). Catchments grouped and summarised by the author, whole, for all of Europe."
   s2s:
     name: source-to-sink, the author's catchment composition and budget pipeline
     url: "https://github.com/AdmcCarthy/source-to-sink"
@@ -60,19 +60,21 @@ data:
 ---
 
 Reservoir sand is somebody's hillside, carried down a river and left on a shelf. The rocks a river drains set what
-grains it carries; its size, relief and climate set how much. North-east Europe holds three kinds of hillside in
-one frame: the Norwegian shield with its Caledonian nappes, the Paleozoic uplands and Mesozoic lowlands of Britain
-and Ireland, and the glacial plains that drain to the southern North Sea and the Baltic. This story measures the
-catchments of all three, reads what they are made of, estimates what they deliver, sets them side by side, and
-says where today stops standing for the basins' past.
+grains it carries; its size, relief and climate set how much. Around the North Sea there are three kinds of hillside:
+the Norwegian shield with its Caledonian nappes, the Paleozoic uplands and Mesozoic lowlands of Britain and Ireland,
+and the glacial plains that drain to the southern North Sea and the Baltic. This story measures every catchment in
+Europe, whole, from Iceland to the edge of the Caspian; reads what they are made of; estimates what they deliver; sets
+the North Sea's three sources beside the rest of the continent; and says where today stops standing for the basins' past.
 
-## One frame, three kinds of source
+## All of Europe, three kinds of source at the North Sea
 
 ::: step {beat=situation}
-### The catchments of North-east Europe
+### The catchments of Europe
 
 Each outlined area is one HydroSHEDS catchment: {{ n_systems }} whole river systems and the rest coastal groups,
-{{ area_mkm2 | round:2 }} million km² in all. Ribbons are rivers, wider with more water, over the fine fall lines of
+{{ area_mkm2 | round:1 }} million km² in all, every one whole even where its mouth is far off the map. The edge of the
+map takes in some ground outside Europe (Anatolia, the Caucasus, North Africa); those catchments are drawn and listed
+but left out of the comparisons. Ribbons are rivers, wider with more water, over the fine fall lines of
 the terrain; dots are mouths; colour is the bedrock group. The sea floor is on Relief's depth scale.
 
 ```chart
@@ -130,16 +132,36 @@ subtitle: Catchments by bedrock group, rivers hidden
 
 ::: step {beat=complication}
 The {{ low_n }} lowland catchments draining to the southern North Sea and the Baltic are {{ low_cover | pct }}
-glacial cover with {{ low_clastic | pct }} clastic rock showing through. Their rivers are the region's largest; their
-sources are the softest and the muddiest.
+glacial cover with {{ low_clastic | pct }} clastic rock showing through. Their rivers are the largest that reach the
+North Sea and the Baltic; their sources are the softest and the muddiest.
 
 ```chart
 use: basin
 frame: ne_europe
 view: size
 rivers: flow
-title: The lowland rivers are the big ones
+title: The big rivers drain the plains
 subtitle: Catchments by size class, log scale
+```
+:::
+
+::: step {beat=complication}
+### Most of Europe's sediment leaves by the south and west
+
+South of the plain the ground is younger and steeper. The {{ alp_n }} catchments of the Alps, Italy and the Balkans and
+the {{ fr_n }} of France and Iberia carry {{ alp_qs | round:0 }} and {{ fr_qs | round:0 }} Mt a year by the same
+relation, against {{ nor_qs | round:0 }} for Norway and {{ brit_qs | round:0 }} for Britain and Ireland. Their rock is
+{{ fr_carbonate | pct }} carbonate in France and Iberia and {{ alp_carbonate | pct }} in the Alps, Italy and the Balkans.
+Eastern Europe's {{ east_n }} catchments are the largest rivers on the flattest ground and yield
+{{ east_yield | round:0 }} t per km² a year.
+
+```chart
+use: basin
+frame: ne_europe
+view: yield
+rivers: off
+title: Where Europe's sediment comes from
+subtitle: BQART sediment yield, t per km² a year, log scale
 ```
 :::
 
@@ -156,7 +178,7 @@ subtitle: Share of mapped catchment area by harmonised bedrock class, per cent
 source: s2s
 confidence: derived
 unit: per cent of mapped area
-notes: Catchments are placed in a terrain by centroid; France and the catchments whose mouths lie beyond the frame (Danube, Dnieper, Rhône) are left out. Shares are area-weighted over the catchments; national maps first, the IGME 5000 and the PIG map where none covers the ground. Other rock is schist, mafic and unclassified units.
+notes: Catchments are placed in a terrain by centroid; catchments beyond Europe's edge (Anatolia, the Caucasus, North Africa, the Kola coast) are left out. Shares are area-weighted over the catchments; national maps first, the IGME 5000 and the PIG map where none covers the ground. Other rock is schist, mafic and unclassified units.
 ```
 
 ## How much each terrain carries
@@ -178,7 +200,7 @@ subtitle: BQART sediment yield, t per km² a year, log scale
 :::
 
 ::: step {beat=question}
-The Rhine within the frame comes out at {{ rhine_qs | round:1 }} Mt a year against about
+The Rhine comes out at {{ rhine_qs | round:1 }} Mt a year against about
 {{ rhine_monitored | cite:hoffmann }} measured at the Dutch border, {{ rhine_ratio | round:0 }} times too high: the
 storage in Lake Constance and the floodplains that the relation does not carry. The Glomma, with no such traps, comes
 out at {{ glomma_qs | round:1 }} against about {{ glomma_known | round:1 }}.
@@ -199,12 +221,12 @@ type: bars
 data: compare_t
 label: terrain
 value: yield_median
-title: Sweden and Finland yield least, Britain most
+title: France and Iberia yield most, the eastern plain and the northern shield least
 subtitle: Median BQART sediment yield by source terrain, t per km² a year
 source: s2s
 confidence: derived
 unit: t per km² a year
-notes: BQART with Relief's relief, HydroRIVERS discharge, one mean temperature per climate zone and the paper's lithology factor; no reservoir trapping beyond a zone guess, so lowland rivers run high against gauges. The Swedish and Finnish median is low because the shield there is flat and cold.
+notes: BQART with Relief's relief, HydroRIVERS discharge, one mean temperature per climate zone and the paper's lithology factor; no reservoir trapping beyond a zone guess, so lowland rivers run high against gauges. The Swedish, Finnish and eastern medians are low because the ground there is flat and, in the north, cold; Relief's 4 km terrain for the whole continent smooths peaks, so steep small catchments run lower than on a finer grid.
 ```
 
 ## What reaches the shelf
@@ -264,12 +286,12 @@ type: bars
 data: compare_t
 label: terrain
 value: quality_pct
-title: The flat shield scores highest, the nappes and the shale lowest
+title: The lowlands and the shield score highest; Iberia, the east and the nappes lowest
 subtitle: Area-weighted sand quality proxy by source terrain, per cent
 source: s2s
 confidence: derived
 unit: per cent
-notes: The proxy is a recipe on bedrock shares, grain words and climate (quartz-rich sources count for; ductile, mud and carbonate sources against; cold climates keep feldspar fresh). It is not a measured mineralogy. France and the catchments whose mouths lie beyond the frame are listed in the table but left out of the comparison.
+notes: The proxy is a recipe on bedrock shares, grain words and climate (quartz-rich sources count for; ductile, mud and carbonate sources against; cold climates keep feldspar fresh). It is not a measured mineralogy. Catchments beyond Europe's edge are listed in the table but left out of the comparison.
 ```
 
 ## Where today stops standing for the past

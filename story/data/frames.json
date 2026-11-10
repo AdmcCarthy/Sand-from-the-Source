@@ -4,16 +4,16 @@
    "name": "North-east Europe: Britain, Ireland, southern Scandinavia, the Baltic and Poland",
    "crs": "EPSG:3035",
    "extent": [
-    3130000,
+    2560000,
     2760000,
-    5400000,
+    5800000,
     4340000
    ],
    "bbox": [
-    -12.018,
-    46.801,
-    30.063,
-    62.172
+    -138.308,
+    -67.555,
+    78.063,
+    77.919
    ],
    "sinks": [
     {
@@ -24,7 +24,7 @@
     {
      "name": "Norwegian Sea",
      "lon": 3.0,
-     "lat": 63.5
+     "lat": 66.0
     },
     {
      "name": "Baltic Sea",
@@ -33,192 +33,202 @@
     },
     {
      "name": "Atlantic",
-     "lon": -11.0,
-     "lat": 52.5
+     "lon": -14.0,
+     "lat": 48.0
     },
     {
      "name": "Celtic Sea",
      "lon": -7.5,
      "lat": 50.3
+    },
+    {
+     "name": "Black Sea",
+     "lon": 34.0,
+     "lat": 43.5
+    },
+    {
+     "name": "Mediterranean",
+     "lon": 10.0,
+     "lat": 38.0
     }
    ],
    "clusters": {
     "0": {
-     "name": "Carbonates, mainly Paleozoic",
-     "n_systems": 8,
+     "name": "Granite and felsic volcanics, mainly older Proterozoic, richer in Paleozoic",
+     "n_systems": 93,
      "mean": {
-      "frac_igneous_felsic": 0.0,
-      "frac_igneous_mafic": 0.002,
-      "frac_gneiss_quartzite": 0.0,
-      "frac_schist": 0.0,
-      "frac_clastic": 0.087,
-      "frac_carbonate": 0.833,
-      "frac_unconsolidated": 0.019,
-      "age_Cenozoic": 0.086,
-      "age_Mesozoic": 0.044,
-      "age_Paleozoic": 0.444,
-      "age_Neoproterozoic": 0.001,
-      "age_Older_Proterozoic": 0.0,
-      "age_Archean": 0.0
+      "frac_igneous_felsic": 0.417,
+      "frac_igneous_mafic": 0.13,
+      "frac_gneiss_quartzite": 0.171,
+      "frac_schist": 0.179,
+      "frac_clastic": 0.068,
+      "frac_carbonate": 0.025,
+      "frac_unconsolidated": 0.006,
+      "age_Cenozoic": 0.022,
+      "age_Mesozoic": 0.008,
+      "age_Paleozoic": 0.124,
+      "age_Neoproterozoic": 0.038,
+      "age_Older_Proterozoic": 0.505,
+      "age_Archean": 0.001
      }
     },
     "1": {
-     "name": "Granite and felsic volcanics, mainly older Proterozoic",
-     "n_systems": 33,
+     "name": "Granite and felsic volcanics, mainly older Proterozoic, richer in Archean",
+     "n_systems": 3,
      "mean": {
-      "frac_igneous_felsic": 0.657,
-      "frac_igneous_mafic": 0.051,
-      "frac_gneiss_quartzite": 0.103,
-      "frac_schist": 0.103,
-      "frac_clastic": 0.064,
-      "frac_carbonate": 0.015,
-      "frac_unconsolidated": 0.001,
-      "age_Cenozoic": 0.001,
-      "age_Mesozoic": 0.012,
-      "age_Paleozoic": 0.054,
-      "age_Neoproterozoic": 0.064,
-      "age_Older_Proterozoic": 0.801,
-      "age_Archean": 0.0
+      "frac_igneous_felsic": 0.385,
+      "frac_igneous_mafic": 0.196,
+      "frac_gneiss_quartzite": 0.134,
+      "frac_schist": 0.185,
+      "frac_clastic": 0.073,
+      "frac_carbonate": 0.022,
+      "frac_unconsolidated": 0.005,
+      "age_Cenozoic": 0.0,
+      "age_Mesozoic": 0.0,
+      "age_Paleozoic": 0.083,
+      "age_Neoproterozoic": 0.035,
+      "age_Older_Proterozoic": 0.475,
+      "age_Archean": 0.132
      }
     },
     "2": {
      "name": "Clastic sedimentary rocks, mainly Paleozoic",
-     "n_systems": 30,
+     "n_systems": 42,
      "mean": {
-      "frac_igneous_felsic": 0.044,
-      "frac_igneous_mafic": 0.037,
-      "frac_gneiss_quartzite": 0.031,
+      "frac_igneous_felsic": 0.039,
+      "frac_igneous_mafic": 0.028,
+      "frac_gneiss_quartzite": 0.024,
       "frac_schist": 0.032,
-      "frac_clastic": 0.586,
-      "frac_carbonate": 0.125,
-      "frac_unconsolidated": 0.049,
-      "age_Cenozoic": 0.011,
-      "age_Mesozoic": 0.018,
-      "age_Paleozoic": 0.758,
-      "age_Neoproterozoic": 0.109,
-      "age_Older_Proterozoic": 0.011,
+      "frac_clastic": 0.635,
+      "frac_carbonate": 0.131,
+      "frac_unconsolidated": 0.043,
+      "age_Cenozoic": 0.019,
+      "age_Mesozoic": 0.079,
+      "age_Paleozoic": 0.636,
+      "age_Neoproterozoic": 0.144,
+      "age_Older_Proterozoic": 0.009,
       "age_Archean": 0.0
      }
     },
     "3": {
      "name": "Unconsolidated cover, mainly Cenozoic",
-     "n_systems": 26,
+     "n_systems": 121,
      "mean": {
-      "frac_igneous_felsic": 0.018,
-      "frac_igneous_mafic": 0.001,
-      "frac_gneiss_quartzite": 0.002,
-      "frac_schist": 0.008,
-      "frac_clastic": 0.057,
-      "frac_carbonate": 0.073,
-      "frac_unconsolidated": 0.523,
-      "age_Cenozoic": 0.857,
-      "age_Mesozoic": 0.014,
+      "frac_igneous_felsic": 0.089,
+      "frac_igneous_mafic": 0.077,
+      "frac_gneiss_quartzite": 0.011,
+      "frac_schist": 0.004,
+      "frac_clastic": 0.064,
+      "frac_carbonate": 0.061,
+      "frac_unconsolidated": 0.421,
+      "age_Cenozoic": 0.814,
+      "age_Mesozoic": 0.054,
       "age_Paleozoic": 0.014,
-      "age_Neoproterozoic": 0.004,
-      "age_Older_Proterozoic": 0.016,
+      "age_Neoproterozoic": 0.001,
+      "age_Older_Proterozoic": 0.007,
       "age_Archean": 0.0
      }
     },
     "4": {
-     "name": "Clastic sedimentary rocks with carbonates, mainly Mesozoic and Cenozoic",
-     "n_systems": 26,
+     "name": "Carbonates with clastic sedimentary rocks, mainly Cenozoic and Mesozoic",
+     "n_systems": 130,
      "mean": {
-      "frac_igneous_felsic": 0.048,
-      "frac_igneous_mafic": 0.067,
-      "frac_gneiss_quartzite": 0.027,
-      "frac_schist": 0.024,
-      "frac_clastic": 0.365,
-      "frac_carbonate": 0.258,
-      "frac_unconsolidated": 0.103,
-      "age_Cenozoic": 0.227,
-      "age_Mesozoic": 0.372,
-      "age_Paleozoic": 0.183,
-      "age_Neoproterozoic": 0.01,
-      "age_Older_Proterozoic": 0.013,
+      "frac_igneous_felsic": 0.038,
+      "frac_igneous_mafic": 0.02,
+      "frac_gneiss_quartzite": 0.022,
+      "frac_schist": 0.029,
+      "frac_clastic": 0.294,
+      "frac_carbonate": 0.408,
+      "frac_unconsolidated": 0.099,
+      "age_Cenozoic": 0.334,
+      "age_Mesozoic": 0.299,
+      "age_Paleozoic": 0.1,
+      "age_Neoproterozoic": 0.004,
+      "age_Older_Proterozoic": 0.007,
       "age_Archean": 0.0
      }
     }
    },
    "budget": {
-    "catchments": 123,
-    "total_qs_mt_yr": 70.45524520243956,
-    "total_sand_mt_yr": 38.350561483010615,
-    "median_yield_t_km2_yr": 11.788428659910597,
-    "glauconite_prone": 55,
-    "calibration_factor": 5.039745775786746,
+    "catchments": 410,
+    "total_qs_mt_yr": 352.25155634266264,
+    "total_sand_mt_yr": 178.1144079842449,
+    "median_yield_t_km2_yr": 14.371469141192069,
+    "glauconite_prone": 162,
+    "calibration_factor": 5.52248145357855,
     "calibration_basis": "median of 6 monitored rivers in this frame (Rhine, Elbe, Vistula, Glomma, Oder, Seine)",
-    "total_qs_cal_mt_yr": 13.97992048347735,
-    "total_sand_cal_mt_yr": 7.609622228816448
+    "total_qs_cal_mt_yr": 63.78501391152791,
+    "total_sand_cal_mt_yr": 32.252604102242366
    },
    "checks": [
     {
      "river": "Rhine",
      "known_mt_yr": 1.0,
-     "model_mt_yr": 9.030528668211053,
-     "ratio_model_over_known": 9.030528668211053,
+     "model_mt_yr": 23.8015062948033,
+     "ratio_model_over_known": 23.8015062948033,
      "q_source": "HydroRIVERS mouth reach",
-     "relief_km": 1.149,
-     "temp_c": 7.744699462607986,
+     "relief_km": 3.3505,
+     "temp_c": 7.1325722343441065,
      "L": 1.2437303694604662,
      "basis": "about 1 Mt/yr at the German-Dutch border today, near a natural baseline of about 1 Mt/yr (Hoffmann and others 2023, Earth Surface Dynamics)"
     },
     {
      "river": "Elbe",
      "known_mt_yr": 0.6,
-     "model_mt_yr": 4.810310537969673,
-     "ratio_model_over_known": 8.017184229949455,
+     "model_mt_yr": 4.749005156440624,
+     "ratio_model_over_known": 7.915008594067707,
      "q_source": "HydroRIVERS mouth reach",
-     "relief_km": 1.3645,
-     "temp_c": 5.203761080721178,
+     "relief_km": 1.33,
+     "temp_c": 5.258551908153044,
      "L": 1.3746960365249978,
      "basis": "order 0.5 to 0.8 Mt/yr from German monitoring (BfG), figure from memory, to be checked"
     },
     {
      "river": "Vistula",
      "known_mt_yr": 1.5,
-     "model_mt_yr": 3.900715675903912,
-     "ratio_model_over_known": 2.6004771172692744,
+     "model_mt_yr": 3.678438366835253,
+     "ratio_model_over_known": 2.4522922445568356,
      "q_source": "HydroRIVERS mouth reach",
-     "relief_km": 2.098,
-     "temp_c": 0.9987330039177552,
-     "L": 1.8074346805462442,
+     "relief_km": 1.9785,
+     "temp_c": 0.9990868696675868,
+     "L": 1.8074346805462445,
      "basis": "order 1 to 1.6 Mt/yr to the Baltic, figure from memory (HELCOM), to be checked"
     },
     {
      "river": "Glomma",
      "known_mt_yr": 0.4,
-     "model_mt_yr": 0.7469372295965914,
-     "ratio_model_over_known": 1.8673430739914783,
+     "model_mt_yr": 0.7271112858310711,
+     "ratio_model_over_known": 1.8177782145776777,
      "q_source": "HydroRIVERS mouth reach",
-     "relief_km": 2.0645,
-     "temp_c": 0.46820237195642356,
+     "relief_km": 2.0015,
+     "temp_c": 0.3607116813648102,
      "L": 0.8775844051769587,
      "basis": "order 0.3 to 0.6 Mt/yr (Bogen, NVE), figure from memory, to be checked"
     },
     {
      "river": "Oder",
      "known_mt_yr": 0.3,
-     "model_mt_yr": 2.243704330291265,
-     "ratio_model_over_known": 7.479014434304218,
+     "model_mt_yr": 2.0579999861531593,
+     "ratio_model_over_known": 6.8599999538438645,
      "q_source": "HydroRIVERS mouth reach",
-     "relief_km": 1.2945,
-     "temp_c": 2.736973551786715,
+     "relief_km": 1.1535,
+     "temp_c": 2.8079292582193323,
      "L": 1.743994584857599,
      "basis": "order 0.2 to 0.4 Mt/yr, figure from memory, to be checked"
     },
     {
      "river": "Seine",
      "known_mt_yr": 0.7,
-     "model_mt_yr": 1.6734479588665887,
-     "ratio_model_over_known": 2.390639941237984,
+     "model_mt_yr": 2.9294740673192643,
+     "ratio_model_over_known": 4.184962953313235,
      "q_source": "HydroRIVERS mouth reach",
-     "relief_km": 0.445,
+     "relief_km": 0.779,
      "temp_c": 8.5,
      "L": 1.2474961856431217,
      "basis": "order 0.5 to 0.9 Mt/yr (French export to the sea studies), figure from memory, to be checked"
     }
    ],
-   "built": "2026-11-10T21:44:03+00:00",
+   "built": "2026-11-10T22:02:17+00:00",
    "relief": {
     "extent": [
      2560000,
@@ -247,16 +257,16 @@
    "name": "North Sea: Norway and Britain face to face, Shetland between",
    "crs": "EPSG:25832",
    "extent": [
-    -140000,
-    6090000,
-    600000,
-    6970000
+    -730000,
+    6030000,
+    1410000,
+    7080000
    ],
    "bbox": [
-    -3.409,
-    54.54,
-    10.974,
-    62.87
+    -138.308,
+    -67.555,
+    78.063,
+    77.919
    ],
    "sinks": [
     {
@@ -278,130 +288,215 @@
      "name": "Norwegian Trench",
      "lon": 4.5,
      "lat": 58.3
+    },
+    {
+     "name": "North Sea",
+     "lon": 3.0,
+     "lat": 56.5
+    },
+    {
+     "name": "Baltic Sea",
+     "lon": 19.5,
+     "lat": 57.5
+    },
+    {
+     "name": "Black Sea",
+     "lon": 34.0,
+     "lat": 43.5
+    },
+    {
+     "name": "Mediterranean",
+     "lon": 10.0,
+     "lat": 38.0
+    },
+    {
+     "name": "Atlantic",
+     "lon": -14.0,
+     "lat": 48.0
+    },
+    {
+     "name": "Norwegian Sea",
+     "lon": 3.0,
+     "lat": 66.0
     }
    ],
    "clusters": {
     "0": {
-     "name": "Granite and felsic volcanics, mainly older Proterozoic",
-     "n_systems": 3,
+     "name": "Granite and felsic volcanics, mainly older Proterozoic, richer in Paleozoic",
+     "n_systems": 93,
      "mean": {
-      "frac_igneous_felsic": 0.71,
-      "frac_igneous_mafic": 0.047,
-      "frac_gneiss_quartzite": 0.061,
-      "frac_schist": 0.172,
-      "frac_clastic": 0.002,
-      "frac_carbonate": 0.008,
-      "frac_unconsolidated": 0.0,
-      "age_Cenozoic": 0.0,
-      "age_Mesozoic": 0.0,
-      "age_Paleozoic": 0.13,
-      "age_Neoproterozoic": 0.2,
-      "age_Older_Proterozoic": 0.657,
-      "age_Archean": 0.0
+      "frac_igneous_felsic": 0.417,
+      "frac_igneous_mafic": 0.13,
+      "frac_gneiss_quartzite": 0.171,
+      "frac_schist": 0.179,
+      "frac_clastic": 0.068,
+      "frac_carbonate": 0.025,
+      "frac_unconsolidated": 0.006,
+      "age_Cenozoic": 0.022,
+      "age_Mesozoic": 0.008,
+      "age_Paleozoic": 0.124,
+      "age_Neoproterozoic": 0.038,
+      "age_Older_Proterozoic": 0.505,
+      "age_Archean": 0.001
      }
     },
     "1": {
-     "name": "Clastic sedimentary rocks, mainly Neoproterozoic and Paleozoic",
-     "n_systems": 5,
+     "name": "Granite and felsic volcanics, mainly older Proterozoic, richer in Archean",
+     "n_systems": 3,
      "mean": {
-      "frac_igneous_felsic": 0.116,
-      "frac_igneous_mafic": 0.094,
-      "frac_gneiss_quartzite": 0.102,
-      "frac_schist": 0.008,
-      "frac_clastic": 0.656,
-      "frac_carbonate": 0.021,
-      "frac_unconsolidated": 0.001,
-      "age_Cenozoic": 0.017,
-      "age_Mesozoic": 0.002,
-      "age_Paleozoic": 0.406,
-      "age_Neoproterozoic": 0.418,
-      "age_Older_Proterozoic": 0.001,
-      "age_Archean": 0.0
+      "frac_igneous_felsic": 0.385,
+      "frac_igneous_mafic": 0.196,
+      "frac_gneiss_quartzite": 0.134,
+      "frac_schist": 0.185,
+      "frac_clastic": 0.073,
+      "frac_carbonate": 0.022,
+      "frac_unconsolidated": 0.005,
+      "age_Cenozoic": 0.0,
+      "age_Mesozoic": 0.0,
+      "age_Paleozoic": 0.083,
+      "age_Neoproterozoic": 0.035,
+      "age_Older_Proterozoic": 0.475,
+      "age_Archean": 0.132
      }
     },
     "2": {
      "name": "Clastic sedimentary rocks, mainly Paleozoic",
-     "n_systems": 5,
+     "n_systems": 42,
      "mean": {
-      "frac_igneous_felsic": 0.029,
-      "frac_igneous_mafic": 0.088,
-      "frac_gneiss_quartzite": 0.0,
-      "frac_schist": 0.0,
-      "frac_clastic": 0.714,
-      "frac_carbonate": 0.169,
-      "frac_unconsolidated": 0.0,
-      "age_Cenozoic": 0.0,
-      "age_Mesozoic": 0.081,
-      "age_Paleozoic": 0.82,
-      "age_Neoproterozoic": 0.003,
-      "age_Older_Proterozoic": 0.0,
+      "frac_igneous_felsic": 0.039,
+      "frac_igneous_mafic": 0.028,
+      "frac_gneiss_quartzite": 0.024,
+      "frac_schist": 0.032,
+      "frac_clastic": 0.635,
+      "frac_carbonate": 0.131,
+      "frac_unconsolidated": 0.043,
+      "age_Cenozoic": 0.019,
+      "age_Mesozoic": 0.079,
+      "age_Paleozoic": 0.636,
+      "age_Neoproterozoic": 0.144,
+      "age_Older_Proterozoic": 0.009,
       "age_Archean": 0.0
      }
     },
     "3": {
      "name": "Unconsolidated cover, mainly Cenozoic",
-     "n_systems": 5,
+     "n_systems": 121,
      "mean": {
-      "frac_igneous_felsic": 0.0,
-      "frac_igneous_mafic": 0.0,
-      "frac_gneiss_quartzite": 0.0,
-      "frac_schist": 0.0,
-      "frac_clastic": 0.008,
-      "frac_carbonate": 0.014,
-      "frac_unconsolidated": 0.166,
-      "age_Cenozoic": 0.877,
-      "age_Mesozoic": 0.002,
-      "age_Paleozoic": 0.0,
-      "age_Neoproterozoic": 0.0,
-      "age_Older_Proterozoic": 0.0,
+      "frac_igneous_felsic": 0.089,
+      "frac_igneous_mafic": 0.077,
+      "frac_gneiss_quartzite": 0.011,
+      "frac_schist": 0.004,
+      "frac_clastic": 0.064,
+      "frac_carbonate": 0.061,
+      "frac_unconsolidated": 0.421,
+      "age_Cenozoic": 0.814,
+      "age_Mesozoic": 0.054,
+      "age_Paleozoic": 0.014,
+      "age_Neoproterozoic": 0.001,
+      "age_Older_Proterozoic": 0.007,
       "age_Archean": 0.0
      }
     },
     "4": {
-     "name": "Granite and felsic volcanics, mainly older Proterozoic",
-     "n_systems": 6,
+     "name": "Carbonates with clastic sedimentary rocks, mainly Cenozoic and Mesozoic",
+     "n_systems": 130,
      "mean": {
-      "frac_igneous_felsic": 0.448,
-      "frac_igneous_mafic": 0.113,
-      "frac_gneiss_quartzite": 0.1,
-      "frac_schist": 0.167,
-      "frac_clastic": 0.094,
-      "frac_carbonate": 0.077,
-      "frac_unconsolidated": 0.002,
-      "age_Cenozoic": 0.0,
-      "age_Mesozoic": 0.0,
-      "age_Paleozoic": 0.168,
-      "age_Neoproterozoic": 0.144,
-      "age_Older_Proterozoic": 0.515,
+      "frac_igneous_felsic": 0.038,
+      "frac_igneous_mafic": 0.02,
+      "frac_gneiss_quartzite": 0.022,
+      "frac_schist": 0.029,
+      "frac_clastic": 0.294,
+      "frac_carbonate": 0.408,
+      "frac_unconsolidated": 0.099,
+      "age_Cenozoic": 0.334,
+      "age_Mesozoic": 0.299,
+      "age_Paleozoic": 0.1,
+      "age_Neoproterozoic": 0.004,
+      "age_Older_Proterozoic": 0.007,
       "age_Archean": 0.0
      }
     }
    },
    "budget": {
-    "catchments": 24,
-    "total_qs_mt_yr": 4.084716904301652,
-    "total_sand_mt_yr": 3.034702323054703,
-    "median_yield_t_km2_yr": 13.272532117881171,
-    "glauconite_prone": 7,
-    "calibration_factor": 2.0384724474244114,
-    "calibration_basis": "median of 1 monitored rivers in this frame (Glomma)",
-    "total_qs_cal_mt_yr": 2.0038126634787967,
-    "total_sand_cal_mt_yr": 1.488713927376854
+    "catchments": 410,
+    "total_qs_mt_yr": 352.25155634266264,
+    "total_sand_mt_yr": 178.1144079842449,
+    "median_yield_t_km2_yr": 14.371469141192069,
+    "glauconite_prone": 162,
+    "calibration_factor": 5.52248145357855,
+    "calibration_basis": "median of 6 monitored rivers in this frame (Rhine, Elbe, Vistula, Glomma, Oder, Seine)",
+    "total_qs_cal_mt_yr": 63.78501391152791,
+    "total_sand_cal_mt_yr": 32.252604102242366
    },
    "checks": [
     {
+     "river": "Rhine",
+     "known_mt_yr": 1.0,
+     "model_mt_yr": 23.8015062948033,
+     "ratio_model_over_known": 23.8015062948033,
+     "q_source": "HydroRIVERS mouth reach",
+     "relief_km": 3.3505,
+     "temp_c": 7.1325722343441065,
+     "L": 1.2437303694604662,
+     "basis": "about 1 Mt/yr at the German-Dutch border today, near a natural baseline of about 1 Mt/yr (Hoffmann and others 2023, Earth Surface Dynamics)"
+    },
+    {
+     "river": "Elbe",
+     "known_mt_yr": 0.6,
+     "model_mt_yr": 4.749005156440624,
+     "ratio_model_over_known": 7.915008594067707,
+     "q_source": "HydroRIVERS mouth reach",
+     "relief_km": 1.33,
+     "temp_c": 5.258551908153044,
+     "L": 1.3746960365249978,
+     "basis": "order 0.5 to 0.8 Mt/yr from German monitoring (BfG), figure from memory, to be checked"
+    },
+    {
+     "river": "Vistula",
+     "known_mt_yr": 1.5,
+     "model_mt_yr": 3.678438366835253,
+     "ratio_model_over_known": 2.4522922445568356,
+     "q_source": "HydroRIVERS mouth reach",
+     "relief_km": 1.9785,
+     "temp_c": 0.9990868696675868,
+     "L": 1.8074346805462445,
+     "basis": "order 1 to 1.6 Mt/yr to the Baltic, figure from memory (HELCOM), to be checked"
+    },
+    {
      "river": "Glomma",
      "known_mt_yr": 0.4,
-     "model_mt_yr": 0.8153889789697646,
-     "ratio_model_over_known": 2.0384724474244114,
+     "model_mt_yr": 0.7271112858310711,
+     "ratio_model_over_known": 1.8177782145776777,
      "q_source": "HydroRIVERS mouth reach",
-     "relief_km": 2.212,
-     "temp_c": -0.02983128833007631,
-     "L": 0.8775844051769588,
+     "relief_km": 2.0015,
+     "temp_c": 0.3607116813648102,
+     "L": 0.8775844051769587,
      "basis": "order 0.3 to 0.6 Mt/yr (Bogen, NVE), figure from memory, to be checked"
+    },
+    {
+     "river": "Oder",
+     "known_mt_yr": 0.3,
+     "model_mt_yr": 2.0579999861531593,
+     "ratio_model_over_known": 6.8599999538438645,
+     "q_source": "HydroRIVERS mouth reach",
+     "relief_km": 1.1535,
+     "temp_c": 2.8079292582193323,
+     "L": 1.743994584857599,
+     "basis": "order 0.2 to 0.4 Mt/yr, figure from memory, to be checked"
+    },
+    {
+     "river": "Seine",
+     "known_mt_yr": 0.7,
+     "model_mt_yr": 2.9294740673192643,
+     "ratio_model_over_known": 4.184962953313235,
+     "q_source": "HydroRIVERS mouth reach",
+     "relief_km": 0.779,
+     "temp_c": 8.5,
+     "L": 1.2474961856431217,
+     "basis": "order 0.5 to 0.9 Mt/yr (French export to the sea studies), figure from memory, to be checked"
     }
    ],
-   "built": "2026-11-10T21:44:18+00:00",
+   "built": "2026-11-10T22:02:17+00:00",
    "relief": {
     "extent": [
      -730000,
@@ -430,139 +525,231 @@
    "name": "Norwegian Sea margin: Norway north of Stad, Sweden and Finland north of 61",
    "crs": "+proj=lcc +lat_1=62 +lat_2=70 +lat_0=66 +lon_0=8 +x_0=0 +y_0=0 +ellps=GRS80 +units=m +no_defs",
    "extent": [
-    -590000,
+    -1150000,
     -510000,
-    480000,
-    490000
+    1050000,
+    600000
    ],
    "bbox": [
-    -7.435,
-    60.946,
-    20.645,
-    70.41
+    -138.308,
+    -67.555,
+    78.063,
+    77.919
    ],
    "sinks": [
     {
      "name": "Norwegian Sea",
-     "lon": 2.0,
+     "lon": 3.0,
      "lat": 66.0
     },
     {
      "name": "Gulf of Bothnia",
      "lon": 20.0,
      "lat": 63.5
+    },
+    {
+     "name": "North Sea",
+     "lon": 3.0,
+     "lat": 56.5
+    },
+    {
+     "name": "Baltic Sea",
+     "lon": 19.5,
+     "lat": 57.5
+    },
+    {
+     "name": "Black Sea",
+     "lon": 34.0,
+     "lat": 43.5
+    },
+    {
+     "name": "Mediterranean",
+     "lon": 10.0,
+     "lat": 38.0
+    },
+    {
+     "name": "Atlantic",
+     "lon": -14.0,
+     "lat": 48.0
     }
    ],
    "clusters": {
     "0": {
-     "name": "Schist and phyllite, mainly older Proterozoic",
-     "n_systems": 4,
+     "name": "Granite and felsic volcanics, mainly older Proterozoic, richer in Paleozoic",
+     "n_systems": 93,
      "mean": {
-      "frac_igneous_felsic": 0.411,
-      "frac_igneous_mafic": 0.048,
-      "frac_gneiss_quartzite": 0.0,
-      "frac_schist": 0.521,
-      "frac_clastic": 0.018,
-      "frac_carbonate": 0.002,
-      "frac_unconsolidated": 0.0,
-      "age_Cenozoic": 0.0,
-      "age_Mesozoic": 0.001,
-      "age_Paleozoic": 0.039,
-      "age_Neoproterozoic": 0.001,
-      "age_Older_Proterozoic": 0.883,
-      "age_Archean": 0.0
+      "frac_igneous_felsic": 0.417,
+      "frac_igneous_mafic": 0.13,
+      "frac_gneiss_quartzite": 0.171,
+      "frac_schist": 0.179,
+      "frac_clastic": 0.068,
+      "frac_carbonate": 0.025,
+      "frac_unconsolidated": 0.006,
+      "age_Cenozoic": 0.022,
+      "age_Mesozoic": 0.008,
+      "age_Paleozoic": 0.124,
+      "age_Neoproterozoic": 0.038,
+      "age_Older_Proterozoic": 0.505,
+      "age_Archean": 0.001
      }
     },
     "1": {
-     "name": "Granite and felsic volcanics with schist and phyllite, mainly Paleozoic and older Proterozoic",
-     "n_systems": 9,
+     "name": "Granite and felsic volcanics, mainly older Proterozoic, richer in Archean",
+     "n_systems": 3,
      "mean": {
-      "frac_igneous_felsic": 0.295,
-      "frac_igneous_mafic": 0.097,
-      "frac_gneiss_quartzite": 0.218,
-      "frac_schist": 0.218,
-      "frac_clastic": 0.055,
-      "frac_carbonate": 0.117,
-      "frac_unconsolidated": 0.0,
+      "frac_igneous_felsic": 0.385,
+      "frac_igneous_mafic": 0.196,
+      "frac_gneiss_quartzite": 0.134,
+      "frac_schist": 0.185,
+      "frac_clastic": 0.073,
+      "frac_carbonate": 0.022,
+      "frac_unconsolidated": 0.005,
       "age_Cenozoic": 0.0,
       "age_Mesozoic": 0.0,
-      "age_Paleozoic": 0.251,
-      "age_Neoproterozoic": 0.099,
-      "age_Older_Proterozoic": 0.239,
-      "age_Archean": 0.0
+      "age_Paleozoic": 0.083,
+      "age_Neoproterozoic": 0.035,
+      "age_Older_Proterozoic": 0.475,
+      "age_Archean": 0.132
      }
     },
     "2": {
-     "name": "Granite and felsic volcanics with schist and phyllite, mainly older Proterozoic",
-     "n_systems": 2,
+     "name": "Clastic sedimentary rocks, mainly Paleozoic",
+     "n_systems": 42,
      "mean": {
-      "frac_igneous_felsic": 0.396,
-      "frac_igneous_mafic": 0.174,
-      "frac_gneiss_quartzite": 0.082,
-      "frac_schist": 0.224,
-      "frac_clastic": 0.091,
-      "frac_carbonate": 0.032,
-      "frac_unconsolidated": 0.0,
-      "age_Cenozoic": 0.0,
-      "age_Mesozoic": 0.0,
-      "age_Paleozoic": 0.125,
-      "age_Neoproterozoic": 0.012,
-      "age_Older_Proterozoic": 0.483,
-      "age_Archean": 0.101
+      "frac_igneous_felsic": 0.039,
+      "frac_igneous_mafic": 0.028,
+      "frac_gneiss_quartzite": 0.024,
+      "frac_schist": 0.032,
+      "frac_clastic": 0.635,
+      "frac_carbonate": 0.131,
+      "frac_unconsolidated": 0.043,
+      "age_Cenozoic": 0.019,
+      "age_Mesozoic": 0.079,
+      "age_Paleozoic": 0.636,
+      "age_Neoproterozoic": 0.144,
+      "age_Older_Proterozoic": 0.009,
+      "age_Archean": 0.0
      }
     },
     "3": {
-     "name": "Granite and felsic volcanics, mainly older Proterozoic",
-     "n_systems": 12,
+     "name": "Unconsolidated cover, mainly Cenozoic",
+     "n_systems": 121,
      "mean": {
-      "frac_igneous_felsic": 0.611,
-      "frac_igneous_mafic": 0.173,
-      "frac_gneiss_quartzite": 0.008,
-      "frac_schist": 0.133,
-      "frac_clastic": 0.071,
-      "frac_carbonate": 0.003,
-      "frac_unconsolidated": 0.0,
-      "age_Cenozoic": 0.083,
-      "age_Mesozoic": 0.0,
-      "age_Paleozoic": 0.028,
-      "age_Neoproterozoic": 0.017,
-      "age_Older_Proterozoic": 0.779,
+      "frac_igneous_felsic": 0.089,
+      "frac_igneous_mafic": 0.077,
+      "frac_gneiss_quartzite": 0.011,
+      "frac_schist": 0.004,
+      "frac_clastic": 0.064,
+      "frac_carbonate": 0.061,
+      "frac_unconsolidated": 0.421,
+      "age_Cenozoic": 0.814,
+      "age_Mesozoic": 0.054,
+      "age_Paleozoic": 0.014,
+      "age_Neoproterozoic": 0.001,
+      "age_Older_Proterozoic": 0.007,
       "age_Archean": 0.0
      }
     },
     "4": {
-     "name": "Schist and phyllite with clastic sedimentary rocks, mainly older Proterozoic and Paleozoic",
-     "n_systems": 5,
+     "name": "Carbonates with clastic sedimentary rocks, mainly Cenozoic and Mesozoic",
+     "n_systems": 130,
      "mean": {
-      "frac_igneous_felsic": 0.245,
-      "frac_igneous_mafic": 0.088,
-      "frac_gneiss_quartzite": 0.05,
-      "frac_schist": 0.34,
-      "frac_clastic": 0.247,
-      "frac_carbonate": 0.029,
-      "frac_unconsolidated": 0.002,
-      "age_Cenozoic": 0.0,
-      "age_Mesozoic": 0.0,
-      "age_Paleozoic": 0.287,
-      "age_Neoproterozoic": 0.092,
-      "age_Older_Proterozoic": 0.315,
+      "frac_igneous_felsic": 0.038,
+      "frac_igneous_mafic": 0.02,
+      "frac_gneiss_quartzite": 0.022,
+      "frac_schist": 0.029,
+      "frac_clastic": 0.294,
+      "frac_carbonate": 0.408,
+      "frac_unconsolidated": 0.099,
+      "age_Cenozoic": 0.334,
+      "age_Mesozoic": 0.299,
+      "age_Paleozoic": 0.1,
+      "age_Neoproterozoic": 0.004,
+      "age_Older_Proterozoic": 0.007,
       "age_Archean": 0.0
      }
     }
    },
    "budget": {
-    "catchments": 32,
-    "total_qs_mt_yr": 6.311805157397121,
-    "total_sand_mt_yr": 5.060012026928957,
-    "median_yield_t_km2_yr": 11.268137151719134,
-    "glauconite_prone": 12,
-    "calibration_factor": 2.5,
-    "calibration_basis": "no monitored river in this frame; the median factor of the North-east Europe frame is used",
-    "total_qs_cal_mt_yr": 2.5247220629588485,
-    "total_sand_cal_mt_yr": 2.024004810771583
+    "catchments": 410,
+    "total_qs_mt_yr": 352.25155634266264,
+    "total_sand_mt_yr": 178.1144079842449,
+    "median_yield_t_km2_yr": 14.371469141192069,
+    "glauconite_prone": 162,
+    "calibration_factor": 5.52248145357855,
+    "calibration_basis": "median of 6 monitored rivers in this frame (Rhine, Elbe, Vistula, Glomma, Oder, Seine)",
+    "total_qs_cal_mt_yr": 63.78501391152791,
+    "total_sand_cal_mt_yr": 32.252604102242366
    },
-   "checks": [],
-   "built": "2026-11-10T21:44:34+00:00",
+   "checks": [
+    {
+     "river": "Rhine",
+     "known_mt_yr": 1.0,
+     "model_mt_yr": 23.8015062948033,
+     "ratio_model_over_known": 23.8015062948033,
+     "q_source": "HydroRIVERS mouth reach",
+     "relief_km": 3.3505,
+     "temp_c": 7.1325722343441065,
+     "L": 1.2437303694604662,
+     "basis": "about 1 Mt/yr at the German-Dutch border today, near a natural baseline of about 1 Mt/yr (Hoffmann and others 2023, Earth Surface Dynamics)"
+    },
+    {
+     "river": "Elbe",
+     "known_mt_yr": 0.6,
+     "model_mt_yr": 4.749005156440624,
+     "ratio_model_over_known": 7.915008594067707,
+     "q_source": "HydroRIVERS mouth reach",
+     "relief_km": 1.33,
+     "temp_c": 5.258551908153044,
+     "L": 1.3746960365249978,
+     "basis": "order 0.5 to 0.8 Mt/yr from German monitoring (BfG), figure from memory, to be checked"
+    },
+    {
+     "river": "Vistula",
+     "known_mt_yr": 1.5,
+     "model_mt_yr": 3.678438366835253,
+     "ratio_model_over_known": 2.4522922445568356,
+     "q_source": "HydroRIVERS mouth reach",
+     "relief_km": 1.9785,
+     "temp_c": 0.9990868696675868,
+     "L": 1.8074346805462445,
+     "basis": "order 1 to 1.6 Mt/yr to the Baltic, figure from memory (HELCOM), to be checked"
+    },
+    {
+     "river": "Glomma",
+     "known_mt_yr": 0.4,
+     "model_mt_yr": 0.7271112858310711,
+     "ratio_model_over_known": 1.8177782145776777,
+     "q_source": "HydroRIVERS mouth reach",
+     "relief_km": 2.0015,
+     "temp_c": 0.3607116813648102,
+     "L": 0.8775844051769587,
+     "basis": "order 0.3 to 0.6 Mt/yr (Bogen, NVE), figure from memory, to be checked"
+    },
+    {
+     "river": "Oder",
+     "known_mt_yr": 0.3,
+     "model_mt_yr": 2.0579999861531593,
+     "ratio_model_over_known": 6.8599999538438645,
+     "q_source": "HydroRIVERS mouth reach",
+     "relief_km": 1.1535,
+     "temp_c": 2.8079292582193323,
+     "L": 1.743994584857599,
+     "basis": "order 0.2 to 0.4 Mt/yr, figure from memory, to be checked"
+    },
+    {
+     "river": "Seine",
+     "known_mt_yr": 0.7,
+     "model_mt_yr": 2.9294740673192643,
+     "ratio_model_over_known": 4.184962953313235,
+     "q_source": "HydroRIVERS mouth reach",
+     "relief_km": 0.779,
+     "temp_c": 8.5,
+     "L": 1.2474961856431217,
+     "basis": "order 0.5 to 0.9 Mt/yr (French export to the sea studies), figure from memory, to be checked"
+    }
+   ],
+   "built": "2026-11-10T22:02:17+00:00",
    "relief": {
     "extent": [
      -1150000,
