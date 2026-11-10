@@ -16,17 +16,15 @@ export default function basin(el, datasets, opts = {}) {
 
   async function load(frame) {
     if (cache[frame]) return cache[frame];
-    const topoS = datasets[`${frame}_catchments`], topoR = datasets[`${frame}_rivers`];
-    const systems = topojson.feature(topoS, topoS.objects.systems).features;
-    const mesh = topojson.mesh(topoS, topoS.objects.systems, (a, b) => a !== b);
-    const rivers = topojson.feature(topoR, topoR.objects.rivers).features;
+    const systems = datasets[`${frame}_catchments`].features;
+    const rivers = datasets[`${frame}_rivers`].features;
     const outlets = datasets[`${frame}_outlets`].features;
     const land = datasets[`${frame}_land`].features;
     const slope = datasets[`${frame}_slope_flow`] ? datasets[`${frame}_slope_flow`].features : [];
     const img = new Image();
     img.src = new URL(`${frame}_hillshade.png`, import.meta.url).href;
     await new Promise((res) => { img.onload = res; img.onerror = res; });
-    return (cache[frame] = { systems, mesh, rivers, outlets, land, slope, img: img.width ? img : null, meta: frames[frame] });
+    return (cache[frame] = { systems, rivers, outlets, land, slope, img: img.width ? img : null, meta: frames[frame] });
   }
 
   const alpha = (hex, a) => { const c = d3.color(hex); if (!c) return hex; c.opacity = a; return c.formatRgb(); };

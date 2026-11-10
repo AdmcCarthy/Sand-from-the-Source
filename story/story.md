@@ -41,13 +41,13 @@ data:
   composition: data/composition.csv
   budget: data/budget.csv
   frames: data/frames.json
-  north_sea_catchments: data/north_sea_catchments.json
-  north_sea_rivers: data/north_sea_rivers.json
+  north_sea_catchments: data/north_sea_catchments.geojson
+  north_sea_rivers: data/north_sea_rivers.geojson
   north_sea_outlets: data/north_sea_outlets.geojson
   north_sea_land: data/north_sea_land.geojson
   north_sea_slope_flow: data/north_sea_slope_flow.geojson
-  norwegian_sea_catchments: data/norwegian_sea_catchments.json
-  norwegian_sea_rivers: data/norwegian_sea_rivers.json
+  norwegian_sea_catchments: data/norwegian_sea_catchments.geojson
+  norwegian_sea_rivers: data/norwegian_sea_rivers.geojson
   norwegian_sea_outlets: data/norwegian_sea_outlets.geojson
   norwegian_sea_land: data/norwegian_sea_land.geojson
   norwegian_sea_slope_flow: data/norwegian_sea_slope_flow.geojson
@@ -116,8 +116,9 @@ id: comp
 type: bars
 data: composition
 label: catchment
-value: share
-part: part
+value: total
+part: [frac_igneous_felsic, frac_gneiss_quartzite, frac_schist, frac_igneous_mafic, frac_clastic, frac_carbonate, frac_unconsolidated, frac_other]
+parts_labels: [granite and felsic volcanics, gneiss and quartzite, schist and phyllite, mafic and metavolcanic, clastic sedimentary, carbonate, unconsolidated cover, not classified]
 title: What the eighteen largest catchments erode
 subtitle: Share of mapped bedrock area by harmonised class, largest river systems first
 source: s2s
