@@ -81,14 +81,18 @@ export default function basin(el, datasets, opts = {}) {
     last = [width, state];
     const frame = state.frame || "north_sea", view = state.view || "group", rivers = state.rivers || "flow", shade = state.shade ?? 0.9;
     const D = await load(frame);
-    const dark = (document.documentElement.dataset.colourScheme || "light") === "dark";
+    // "Auto" leaves the attribute unset, so the system preference decides
+    const cs = document.documentElement.dataset.colourScheme, dark = cs ? cs === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
     const [x0, y0, x1, y1] = D.meta.relief.extent;
     const aspect = (y1 - y0) / (x1 - x0);
-    const H = opts.height ? opts.height() : Math.round(Math.min(width * aspect, window.innerHeight * (width < 600 ? 0.36 : opts.vhShare ?? 0.62)));
+    // on wide screens the legend sits in a strip under the map so it never covers data; phones keep it over the map corner
+    const strip = width >= 760, LH = strip ? legendHeight(view, rivers, D) : 0;
+    const H = opts.height ? opts.height() : Math.round(Math.min(width * aspect + LH, window.innerHeight * (width < 600 ? 0.36 : opts.vhShare ?? 0.62)));
+    const MH = H - LH;
     const dpr = opts.pixelRatio || window.devicePixelRatio || 1;
     canvas.width = width * dpr; canvas.height = H * dpr; canvas.style.width = width + "px"; canvas.style.height = H + "px";
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const proj = d3.geoIdentity().reflectY(true).fitExtent([[0, 0], [width, H]], { type: "Polygon", coordinates: [[[x0, y0], [x1, y0], [x1, y1], [x0, y1], [x0, y0]]] });
+    const proj = d3.geoIdentity().reflectY(true).fitExtent([[0, 0], [width, MH]], { type: "Polygon", coordinates: [[[x0, y0], [x1, y0], [x1, y1], [x0, y1], [x0, y0]]] });
     const path = d3.geoPath(proj, ctx);
     const [px0, py1] = proj([x0, y0]), [px1, py0] = proj([x1, y1]);
     ctx.fillStyle = token("surface") || (dark ? "#1b2230" : "#eef1f4"); ctx.fillRect(0, 0, width, H);
@@ -132,21 +136,29 @@ export default function basin(el, datasets, opts = {}) {
     for (const s of D.meta.sinks || []) { if (!toXY) break; const p = proj(toXY(s.lon, s.lat)); ctx.fillText(s.name, p[0], p[1]); }
     ctx.restore();
     ctx.strokeStyle = dark ? "rgba(255,255,255,.2)" : "rgba(0,0,0,.2)"; ctx.lineWidth = 1; ctx.strokeRect(px0, py0, px1 - px0, py1 - py0);
-    // legend, bottom left
-    legend(view, rivers, D, dark, H);
+    legend(view, rivers, D, dark, H, strip ? LH : 0);
   }
 
   // Legend, bottom left: swatches for groups, and for every ramp a bar with ticks at the values that matter (log scales are
   // labelled in their own units), plus Relief's depth key when the frame has sea bands.
-  function legend(view, rivers, D, dark, H) {
-    ctx.save(); ctx.font = "11px system-ui, sans-serif"; const x = 12, ink = dark ? "#e6e9ee" : "#26323d", muted = dark ? "rgba(230,233,238,.75)" : "rgba(38,50,61,.75)"; let y = H - 12;
-    const BW = 210, BH = 11;
+  // Height of the legend strip: the tallest block (group swatches, or a bar with its title and ticks) plus a margin.
+  function legendHeight(view, rivers, D) {
+    const nGroups = view === "group" ? Object.keys(D.meta.clusters).length : 0;
+    return Math.max(nGroups * 15, 40) + 18;
+  }
+
+  function legend(view, rivers, D, dark, H, LH = 0) {
+    ctx.save(); ctx.font = "11px system-ui, sans-serif"; let x = 12; const ink = dark ? "#e6e9ee" : "#26323d", muted = dark ? "rgba(230,233,238,.75)" : "rgba(38,50,61,.75)"; let y = H - 12;
+    const BW = 210, BH = 11, bottom = y, gap = 28;
+    // strip mode: each block is a column of its own along the bottom; the cursor `x` moves right after each one
+    const block = (w) => { if (LH) { x += w + gap; y = bottom; } };
     // a quiet panel behind the legend so it reads over the map; its height follows what the legend will hold
     const nGroups = view === "group" ? Object.keys(D.meta.clusters).length : 0;
     const ds = D.meta.relief && D.meta.relief.base ? D.meta.relief.base.depth_scale : null;
     const panelH = (view === "group" ? nGroups * 15 : 35) + (rivers === "slope" || rivers === "all" ? 35 : 0) + (ds ? 35 : 0) + 6;
     const labelW = view === "group" ? Math.max(...Object.values(D.meta.clusters).map((c) => ctx.measureText(`${c.name} (${c.n_systems})`).width)) + 18 : 0;
-    ctx.fillStyle = dark ? "rgba(27,34,48,.78)" : "rgba(245,247,249,.82)"; ctx.fillRect(x - 7, H - 12 - panelH - 2, Math.max(BW, labelW, 240) + 14, panelH + 12);
+    if (LH) { ctx.fillStyle = dark ? "rgba(27,34,48,.6)" : "rgba(245,247,249,.7)"; ctx.fillRect(0, H - LH, ctx.canvas.width, LH); }
+    else { ctx.fillStyle = dark ? "rgba(27,34,48,.78)" : "rgba(245,247,249,.82)"; ctx.fillRect(x - 7, H - 12 - panelH - 2, Math.max(BW, labelW, 240) + 14, panelH + 12); }
     const row = (col, label) => { ctx.fillStyle = col; ctx.fillRect(x, y - 9, 12, 9); ctx.fillStyle = ink; ctx.fillText(label, x + 18, y); y -= 15; };
     const bar = (title, rampOf, ticks) => {
       ctx.font = "10px system-ui, sans-serif"; ctx.fillStyle = muted; ctx.textAlign = "left";
@@ -156,9 +168,10 @@ export default function basin(el, datasets, opts = {}) {
     };
     const lg = (v, lo, span) => (Math.log10(v) - lo) / span;
     // the depth key as Relief's manifest describes it: a linear bar on the frame's depth scale with the manifest's ticks
-    if (ds) { const max = ds.max_m, kind = ds.kind === "ocean" ? "ocean" : "sea"; bar(`sea floor, depth in m (Relief, linear, ${ds.kind} scale)`, (t) => depthColour(kind, t * max, dark), ds.ticks_m.filter((v) => v / max < 0.9).map((v) => [v / max, v.toLocaleString("en-GB")]).concat([[1, max.toLocaleString("en-GB") + "+"]])); }
-    if (rivers === "slope" || rivers === "all") bar(rivers === "all" ? "fall lines over the rivers, colour is gradient" : "slope flow, colour is the mean gradient", (t) => shapeRampFor(dark)(0.08 * t), [0, 2, 4, 6, 8].map((v) => [v / 8, v + " %"]));
-    if (view === "group") { const cl = Object.entries(D.meta.clusters).sort((a, b) => +a[0] - +b[0]); for (const [i, c] of cl.reverse()) row(GROUP_COLOURS[+i % GROUP_COLOURS.length], `${c.name} (${c.n_systems})`); }
+    const mark = () => block(BW);
+    if (ds) { const max = ds.max_m, kind = ds.kind === "ocean" ? "ocean" : "sea"; bar(`sea floor, depth in m (Relief, linear, ${ds.kind} scale)`, (t) => depthColour(kind, t * max, dark), ds.ticks_m.filter((v) => v / max < 0.9).map((v) => [v / max, v.toLocaleString("en-GB")]).concat([[1, max.toLocaleString("en-GB") + "+"]])); mark(); }
+    if (rivers === "slope" || rivers === "all") bar(rivers === "all" ? "fall lines over the rivers, colour is gradient" : "slope flow, colour is the mean gradient", (t) => shapeRampFor(dark)(0.08 * t), [0, 2, 4, 6, 8].map((v) => [v / 8, v + " %"])), mark();
+    if (view === "group") { const cl = Object.entries(D.meta.clusters).sort((a, b) => +a[0] - +b[0]); for (const [i, c] of cl.reverse()) row(GROUP_COLOURS[+i % GROUP_COLOURS.length], `${c.name} (${c.n_systems})`); block(labelW); }
     else if (view === "quality") bar("sand quality proxy", (t) => qualRamp(0.1 + 0.5 * t), [0.1, 0.2, 0.3, 0.4, 0.5, 0.6].map((v) => [(v - 0.1) / 0.5, v.toFixed(1)]));
     else if (view === "yield") bar("sediment yield, t/km²/yr, log scale", (t) => yieldRamp(0.5 + 2.5 * t), [3, 10, 30, 100, 300, 1000].map((v) => [lg(v, 0.5, 2.5), v.toLocaleString("en-GB")]));
     else if (view === "sand") bar("sand supply, Mt/yr, log scale", (t) => yieldRamp(0.5 + 2.5 * t), [0.03, 0.1, 0.3, 1, 3, 10].map((v) => [lg(v, -1.5, 2.5), String(v)]));

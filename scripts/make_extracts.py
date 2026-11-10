@@ -1,7 +1,7 @@
 """Write the small public extracts for the story from the private sibling repos.
 
 Reads source-to-sink/data/derived/<frame>/ (catchments with composition, budget and groups; rivers; slope flow; outlets),
-Relief/data/out/<frame>/ (hillshade and the 0 m land band) and writes story/data/. Only frames whose geology sources
+Relief/data/out/<frame>_wide/ (the landscape region: hillshade, base maps and the 0 m land band) and writes story/data/. Only frames whose geology sources
 are open for public display are used (north_sea, norwegian_sea); see DATA-LICENCE.md. Everything written is derived
 and generalised; no raw survey map is copied.
 """
@@ -21,6 +21,10 @@ S2S = ROOT.parent / "source-to-sink" / "data" / "derived"
 RELIEF = ROOT.parent / "Relief" / "data" / "out"
 OUT = ROOT / "story" / "data"
 FRAMES = ["ne_europe", "north_sea", "norwegian_sea"]
+# The map behind each frame is Relief's landscape (2 : 1) region in the frame's own projection, wider than the catchment frame (Idiom
+# house/screens.md): the catchments fill the old frame, the margin is context. Images are 2,400 px wide, twice the page frame.
+RELIEF_REGION = {fr: f"{fr}_wide" for fr in FRAMES}
+IMG_W = 2400
 KEEP = ["system", "name", "kind", "frame", "area_km2", "size_class", "cluster", "cluster_name", "mapped_frac", "composition_source",
         "sand_quality", "sand_share", "qs_mt_yr", "qs_cal_mt_yr", "sand_supply_mt_yr", "sand_cal_mt_yr", "yield_t_km2_yr", "relief_max_m",
         "temp_c", "q_km3_yr", "q_source", "lithology_factor", "glauconite_prone_shelf", "discharge_cms", "mainstem_km",
@@ -87,21 +91,22 @@ def main() -> None:
         sf = json.loads((d / "slope_flow.geojson").read_text(encoding="utf-8"))
         sf["features"] = [f for i, f in enumerate(sf["features"]) if i % 3 == 0 and f["properties"]["cells"] >= 6]
         (OUT / f"{fr}_slope_flow.geojson").write_text(json.dumps(sf, separators=(",", ":")), encoding="utf-8")
-        # Relief: the hillshade reduced to 1400 px wide and the 0 m land band, with the frame extent
-        man = json.loads((RELIEF / fr / "manifest.json").read_text(encoding="utf-8"))
-        im = Image.open(RELIEF / fr / "regional_hillshade.png").convert("L")
-        im.thumbnail((1400, 1400))
+        # Relief: the hillshade reduced to IMG_W px wide and the 0 m land band, with the frame extent
+        rr = RELIEF_REGION[fr]
+        man = json.loads((RELIEF / rr / "manifest.json").read_text(encoding="utf-8"))
+        im = Image.open(RELIEF / rr / "regional_hillshade.png").convert("L")
+        im.thumbnail((IMG_W, IMG_W))
         (ROOT / "story" / "figures").mkdir(exist_ok=True)
         im.save(ROOT / "story" / "figures" / f"{fr}_hillshade.png", optimize=True)  # beside basin.js, which is copied into the site
-        bands = json.loads((RELIEF / fr / "regional.geojson").read_text(encoding="utf-8"))
+        bands = json.loads((RELIEF / rr / "regional.geojson").read_text(encoding="utf-8"))
         land = [f for f in bands["features"] if f["properties"]["kind"] == "land" and f["properties"]["level"] == 0]
         (OUT / f"{fr}_land.geojson").write_text(json.dumps({"type": "FeatureCollection", "features": land}, separators=(",", ":")), encoding="utf-8")
         # Relief's base map (linear bathymetry, stepped climate-tinted land; Relief/docs/base-maps.md), reduced like the hillshade,
         # and its depth scale for the key
-        rman = json.loads((RELIEF / fr / "manifest.json").read_text(encoding="utf-8"))
+        rman = man
         for th, name in rman["base"]["regional"].items():
-            b = Image.open(RELIEF / fr / name).convert("RGB")
-            b = b.resize((1400, round(b.height * 1400 / b.width)), Image.LANCZOS)
+            b = Image.open(RELIEF / rr / name).convert("RGB")
+            b = b.resize((IMG_W, round(b.height * IMG_W / b.width)), Image.LANCZOS)
             b.save(ROOT / "story" / "figures" / f"{fr}_base_{th}.png", optimize=True)
         manifest["frames"][fr] = {"name": lay["name"], "crs": lay["crs"], "extent": lay["extent"], "bbox": lay["bbox"], "sinks": lay.get("sinks", []),
                                   "clusters": lay["clusters"], "budget": lay["budget"], "checks": lay.get("checks", []), "built": lay["built"],
