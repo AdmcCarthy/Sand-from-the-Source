@@ -1,9 +1,10 @@
 """Write the small public extracts for the story from the private sibling repos.
 
-Reads source-to-sink/data/derived/<frame>/ (catchments with composition, budget and groups; rivers; slope flow; outlets),
-Relief/data/out/<frame>_wide/ (the landscape region: hillshade, base maps and the 0 m land band) and writes story/data/. Only frames whose geology sources
-are open for public display are used (north_sea, norwegian_sea); see DATA-LICENCE.md. Everything written is derived
-and generalised; no raw survey map is copied.
+Reads source-to-sink/data/derived/europe/ (every drainage system from Iceland to the Caspian edge, whole, with composition, budget
+and groups; rivers; slope flow; outlets) and Relief/data/out/<frame>_wide/ (the landscape region: hillshade, base maps and the 0 m
+land band), cuts the Europe set to each frame's map extent, and writes story/data/. One catchment set serves every frame, so a
+system is never cut at a frame edge and a zoomed-out map is as complete as a close one. See DATA-LICENCE.md. Everything written
+is derived and generalised; no raw survey map is copied.
 """
 
 from __future__ import annotations
@@ -13,11 +14,13 @@ from pathlib import Path
 
 import geopandas as gpd
 import pandas as pd
-from PIL import Image
 import shapely
+from PIL import Image
+from shapely.geometry import box, mapping
 
 ROOT = Path(__file__).resolve().parents[1]
 S2S = ROOT.parent / "source-to-sink" / "data" / "derived"
+EU = S2S / "europe"
 RELIEF = ROOT.parent / "Relief" / "data" / "out"
 OUT = ROOT / "story" / "data"
 FRAMES = ["ne_europe", "north_sea", "norwegian_sea"]
@@ -72,28 +75,83 @@ def topo_to_geojson(path: Path, obj: str, keep: list[str] | None = None) -> dict
     return {"type": "FeatureCollection", "features": feats}
 
 
+def clean(v):
+    """JSON-safe property value: NaN and infinities become null."""
+    if isinstance(v, float) and (v != v or v in (float("inf"), float("-inf"))):
+        return None
+    return v
+
+
+def cut_to_frame(fc: dict, src_crs: str, dst_crs: str, extent: list[float], thin: int = 1, min_cells: int = 0) -> dict:
+    """The features of a Europe layer that touch a frame's extent, in the frame's projection, coordinates to the metre."""
+    feats = [f for f in fc["features"] if f.get("geometry")]
+    if not feats:
+        return {"type": "FeatureCollection", "features": []}
+    g = gpd.GeoDataFrame.from_features(feats, crs=src_crs).to_crs(dst_crs)
+    keep = g.intersects(box(*extent)).to_numpy()
+    out = []
+    for i, (geom, f) in enumerate(zip(shapely.set_precision(g.geometry.values, 1.0, mode="pointwise"), feats)):
+        props = f["properties"]
+        if not keep[i] or geom is None or geom.is_empty:
+            continue
+        if thin > 1 and i % thin:
+            continue
+        if min_cells and (props.get("cells") or 0) < min_cells:
+            continue
+        out.append({"type": "Feature", "properties": {k: clean(v) for k, v in props.items()}, "geometry": mapping(geom)})
+    return {"type": "FeatureCollection", "features": out}
+
+
+def terrain_of(lon: float | None, lat: float | None) -> str:
+    """The source terrain of a catchment, by its centroid: the ground it drains, in the groups the story compares."""
+    if lon is None:
+        return "unplaced"
+    if lon < -12 and lat > 62:
+        return "Iceland"
+    if lon < 2.5 and 49.5 <= lat < 61.5 and lon > -11:
+        return "Britain and Ireland"
+    # the Scandinavian divide runs north-east from Trondelag: Norway lies west of it
+    if lat >= 57.5 and lon < 12.5 or lat >= 63 and lon < 12 + (lat - 63) * 1.9:
+        return "Norway"
+    if lat >= 55.3 and 12.5 <= lon < 32 and (lat >= 60 or lon < 19.5):
+        return "Sweden and Finland"
+    if lat < 42 and lon >= 26 or lat < 37 or lat >= 66 and lon >= 32:
+        return "Beyond Europe"  # Anatolia, the Caucasus, North Africa, the Kola coast: left out of the comparison
+    if lon < 8 and lat < 49.5:
+        return "France and Iberia"
+    if lat < 48:
+        return "Alps, Italy and the Balkans"
+    if lon >= 32 or lon >= 27 and lat < 52:
+        return "Eastern Europe"
+    return "Continental lowlands"
+
+
 def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
-    frames = []
     manifest = {"frames": {}}
+    eu = json.loads((EU / "layers.json").read_text(encoding="utf-8"))
+    eu_crs = eu["crs"]
+    systems = pd.read_csv(EU / "systems.csv")
+    sys_keep = ["system", "name", "kind", "area_km2", "log10_area", "size_class", "cluster", "cluster_name", "mapped_frac", "sand_quality",
+                "qs_mt_yr", "qs_cal_mt_yr", "sand_supply_mt_yr", "yield_t_km2_yr", "glauconite_prone_shelf", "discharge_cms"]
+    eu_systems = topo_to_geojson(EU / "systems.topojson", "systems", sys_keep)
+    eu_rivers = topo_to_geojson(EU / "rivers.topojson", "rivers", ["system", "log_discharge"])
+    eu_outlets = json.loads((EU / "outlets.geojson").read_text(encoding="utf-8"))
+    eu_flow = json.loads((EU / "slope_flow.geojson").read_text(encoding="utf-8"))
+    flow_crs = json.loads((RELIEF / "atlantic" / "demo" / "meta.json").read_text(encoding="utf-8"))["crs"]
     for fr in FRAMES:
-        d = S2S / fr
-        lay = json.loads((d / "layers.json").read_text(encoding="utf-8"))
-        s = pd.read_csv(d / "systems.csv")
-        s["frame"] = fr
-        frames.append(s)
-        # catchments and rivers as published (TopoJSON in the frame CRS), outlets, slope flow thinned to one line in three
-        sys_keep = ["system", "name", "kind", "area_km2", "log10_area", "size_class", "cluster", "cluster_name", "mapped_frac", "sand_quality",
-                    "qs_mt_yr", "qs_cal_mt_yr", "sand_supply_mt_yr", "yield_t_km2_yr", "glauconite_prone_shelf", "discharge_cms"]
-        (OUT / f"{fr}_catchments.geojson").write_text(json.dumps(topo_to_geojson(d / "systems.topojson", "systems", sys_keep), separators=(",", ":")), encoding="utf-8")
-        (OUT / f"{fr}_rivers.geojson").write_text(json.dumps(topo_to_geojson(d / "rivers.topojson", "rivers", ["system", "log_discharge"]), separators=(",", ":")), encoding="utf-8")
-        (OUT / f"{fr}_outlets.geojson").write_text((d / "outlets.geojson").read_text(encoding="utf-8"), encoding="utf-8")
-        sf = json.loads((d / "slope_flow.geojson").read_text(encoding="utf-8"))
-        sf["features"] = [f for i, f in enumerate(sf["features"]) if i % 3 == 0 and f["properties"]["cells"] >= 6]
-        (OUT / f"{fr}_slope_flow.geojson").write_text(json.dumps(sf, separators=(",", ":")), encoding="utf-8")
-        # Relief: the hillshade reduced to IMG_W px wide and the 0 m land band, with the frame extent
+        lay = json.loads((S2S / fr / "layers.json").read_text(encoding="utf-8"))
         rr = RELIEF_REGION[fr]
         man = json.loads((RELIEF / rr / "manifest.json").read_text(encoding="utf-8"))
+        ext, fcrs = man["extent"], man["crs"]
+        # the Europe set cut to this frame's map: whole systems, so nothing stops at an old frame edge
+        cat = cut_to_frame(eu_systems, eu_crs, fcrs, ext)
+        (OUT / f"{fr}_catchments.geojson").write_text(json.dumps(cat, separators=(",", ":")), encoding="utf-8")
+        (OUT / f"{fr}_rivers.geojson").write_text(json.dumps(cut_to_frame(eu_rivers, eu_crs, fcrs, ext), separators=(",", ":")), encoding="utf-8")
+        (OUT / f"{fr}_outlets.geojson").write_text(json.dumps(cut_to_frame(eu_outlets, eu_crs, fcrs, ext), separators=(",", ":")), encoding="utf-8")
+        sf = cut_to_frame(eu_flow, flow_crs, fcrs, ext, thin=3, min_cells=6)
+        (OUT / f"{fr}_slope_flow.geojson").write_text(json.dumps(sf, separators=(",", ":")), encoding="utf-8")
+        # Relief: the hillshade reduced to IMG_W px wide and the 0 m land band, with the frame extent
         im = Image.open(RELIEF / rr / "regional_hillshade.png").convert("L")
         im.thumbnail((IMG_W, IMG_W))
         (ROOT / "story" / "figures").mkdir(exist_ok=True)
@@ -103,43 +161,22 @@ def main() -> None:
         (OUT / f"{fr}_land.geojson").write_text(json.dumps({"type": "FeatureCollection", "features": land}, separators=(",", ":")), encoding="utf-8")
         # Relief's base map (linear bathymetry, stepped climate-tinted land; Relief/docs/base-maps.md), reduced like the hillshade,
         # and its depth scale for the key
-        rman = man
-        for th, name in rman["base"]["regional"].items():
+        for th, name in man["base"]["regional"].items():
             b = Image.open(RELIEF / rr / name).convert("RGB")
             b = b.resize((IMG_W, round(b.height * IMG_W / b.width)), Image.LANCZOS)
             b.save(ROOT / "story" / "figures" / f"{fr}_base_{th}.png", optimize=True)
-        manifest["frames"][fr] = {"name": lay["name"], "crs": lay["crs"], "extent": lay["extent"], "bbox": lay["bbox"], "sinks": lay.get("sinks", []),
-                                  "clusters": lay["clusters"], "budget": lay["budget"], "checks": lay.get("checks", []), "built": lay["built"],
+        sinks = {s["name"]: s for s in [*lay.get("sinks", []), *eu.get("sinks", [])]}.values()
+        manifest["frames"][fr] = {"name": lay["name"], "crs": fcrs, "extent": ext, "bbox": eu["bbox"], "sinks": list(sinks),
+                                  "clusters": eu["clusters"], "budget": eu["budget"], "checks": eu.get("checks", []), "built": eu["built"],
                                   "relief": {"extent": man["extent"], "crs": man["crs"], "cell_m": man["lods"]["regional"]["cell"],
-                                             "base": {"depth_scale": rman["base"]["depth_scale"], "style": rman["base"]["style"]}}}
-    allsys = pd.concat(frames, ignore_index=True)
+                                             "base": {"depth_scale": man["base"]["depth_scale"], "style": man["base"]["style"]}}}
+    allsys = systems.copy()
+    allsys["frame"] = "europe"
     allsys = allsys[[c for c in KEEP if c in allsys.columns]]
-    # source terrain by catchment centroid: Britain and Ireland, Norway, Sweden and Finland, the continental lowlands
-    cents = {}
-    for fr in FRAMES:
-        g = gpd.read_parquet(S2S / fr / "systems.parquet")[["system", "geometry"]].to_crs(4326)
-        for sid, c in zip(g["system"].astype(str), g.geometry.centroid):
-            cents.setdefault((fr, sid), (c.x, c.y))
-    def terrain(row):
-        lon, lat = cents.get((row["frame"], str(row["system"])), (None, None))
-        name = str(row["name"])
-        if lon is None:
-            return "unplaced"
-        if "outside the frame" in name or "Black Sea" in name or "Mediterranean" in name:
-            return "Beyond the frame"
-        if lon < 2.5 and 49.5 <= lat < 61.5:
-            return "Britain and Ireland"
-        if lat < 49.5 and lon < 8:
-            return "France"
-        # the Scandinavian divide runs north-east from Trøndelag: Norway lies west of it
-        if lat >= 57.5 and lon < 12.5 or lat >= 63 and lon < 12 + (lat - 63) * 1.9:
-            return "Norway"
-        if lat >= 55.3 and 12.5 <= lon < 32 and (lat >= 60 or lon < 19.5):
-            return "Sweden and Finland"
-        return "Continental lowlands"
-    allsys["terrain"] = allsys.apply(terrain, axis=1)
-    # the same catchment can sit on two frames: keep one row per system for the tables, preferring the NE Europe frame
-    allsys = allsys.sort_values("frame", key=lambda c: c.map({"ne_europe": 0, "north_sea": 1, "norwegian_sea": 2})).drop_duplicates("system")
+    # source terrain by catchment centroid, in lon/lat
+    g = gpd.read_parquet(EU / "systems.parquet")[["system", "geometry"]].to_crs(4326)
+    cents = {str(sid): (c.x, c.y) for sid, c in zip(g["system"].astype(str), g.geometry.representative_point())}
+    allsys["terrain"] = [terrain_of(*cents.get(str(sid), (None, None))) for sid in allsys["system"]]
     comp = allsys.groupby("terrain").apply(lambda d: pd.Series({
         "n": len(d), "area_km2": d["area_km2"].sum(), "qs_mt_yr": d["qs_mt_yr"].sum(), "sand_supply_mt_yr": d["sand_supply_mt_yr"].sum(),
         "sand_share": d["sand_supply_mt_yr"].sum() / max(d["qs_mt_yr"].sum(), 1e-9),

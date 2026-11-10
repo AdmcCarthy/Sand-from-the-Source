@@ -6,7 +6,8 @@ from subscout import metric
 S2S = "s2s"
 HYDRO = "hydrosheds"
 HOFF = "hoffmann"
-TERRAINS = ["Britain and Ireland", "Norway", "Sweden and Finland", "Continental lowlands"]
+TERRAINS = ["Britain and Ireland", "Norway", "Sweden and Finland", "Continental lowlands", "France and Iberia",
+            "Alps, Italy and the Balkans", "Eastern Europe", "Iceland"]
 
 
 def datasets(d):
@@ -44,7 +45,7 @@ def metrics(d):
     checks = f["ne_europe"]["checks"] if "ne_europe" in f else f["north_sea"]["checks"]
     known = {x["river"]: x for x in checks}
     m = {
-        "n_catchments": metric(len(c), "Catchments (river systems over 4,000 km² and coastal groups) on the North-east Europe, North Sea and Norwegian Sea frames, each counted once", source=HYDRO, confidence="observed"),
+        "n_catchments": metric(len(c), "Catchments (river systems over 4,000 km² and coastal groups) between Iceland and the Caspian, each whole and counted once", source=HYDRO, confidence="observed"),
         "n_systems": metric(len(sys_), "River systems among them", source=HYDRO, confidence="observed"),
         "area_mkm2": metric(c["area_km2"].sum() / 1e6, "Total catchment area, million km²", source=HYDRO, confidence="observed"),
         "qs_total": metric(qs, "BQART sediment flux summed over the catchments, Mt a year", source=S2S, confidence="derived"),
@@ -55,14 +56,15 @@ def metrics(d):
         "glauconite_share": metric(big["glauconite_prone_shelf"].mean(), "Share of catchments over 2,000 km² whose yield is under 10 t per km² a year", source=S2S, confidence="interpreted"),
         "glomma_qs": metric(float(glomma["qs_mt_yr"]) if glomma is not None else 0, "BQART flux for the Glomma, Mt a year", source=S2S, confidence="derived"),
         "glomma_known": metric(known.get("Glomma", {}).get("known_mt_yr", 0), "Monitored Glomma load used for the check, Mt a year (order of magnitude, from the NVE record)", source=S2S, confidence="observed"),
-        "rhine_qs": metric(known.get("Rhine", {}).get("model_mt_yr", 0), "BQART flux for the Rhine within the frame, Mt a year", source=S2S, confidence="derived"),
+        "rhine_qs": metric(known.get("Rhine", {}).get("model_mt_yr", 0), "BQART flux for the Rhine, Mt a year", source=S2S, confidence="derived"),
         "rhine_ratio": metric(known.get("Rhine", {}).get("ratio_model_over_known", 0), "Rhine model flux over monitored load", source=S2S, confidence="derived"),
         "n_groups": metric(c["cluster_name"].nunique(), "Composition groups found by k-means", source=S2S, confidence="derived"),
         "quality_max": metric(c["sand_quality"].max(), "Highest sand quality proxy among the catchments", source=S2S, confidence="derived"),
         "quality_median": metric(c["sand_quality"].median(), "Median sand quality proxy", source=S2S, confidence="derived"),
         "rhine_monitored": metric(1.0, "Monitored Rhine load at the German-Dutch border, Mt a year, near a natural baseline of about 1 Mt a year", source=HOFF, confidence="observed"),
     }
-    for key, terrain in (("brit", "Britain and Ireland"), ("nor", "Norway"), ("swe", "Sweden and Finland"), ("low", "Continental lowlands")):
+    for key, terrain in (("brit", "Britain and Ireland"), ("nor", "Norway"), ("swe", "Sweden and Finland"), ("low", "Continental lowlands"),
+                         ("fr", "France and Iberia"), ("alp", "Alps, Italy and the Balkans"), ("east", "Eastern Europe"), ("ice", "Iceland")):
         m[f"{key}_yield"] = metric(_t(d, terrain, "yield_median"), f"Median BQART yield, {terrain}, t per km² a year", source=S2S, confidence="derived")
         m[f"{key}_quality"] = metric(_t(d, terrain, "quality_area_weighted"), f"Area-weighted sand quality proxy, {terrain}", source=S2S, confidence="derived")
         m[f"{key}_sand_share"] = metric(_t(d, terrain, "sand_share"), f"Sand share of the flux, {terrain}", source=S2S, confidence="derived")

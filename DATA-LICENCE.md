@@ -4,7 +4,7 @@ The licence in `LICENSE` (MIT License with Acknowledgement) covers the code, the
 
 ## HydroSHEDS (HydroBASINS, HydroRIVERS)
 
-`*_catchments.json`, `*_rivers.json`, `*_outlets.geojson` and the catchment rows of `catchments.csv` derive from HydroBASINS and HydroRIVERS v1. The HydroSHEDS product pages say the data are freely available for scientific, educational and commercial use with attribution; some catalogues record CC BY 4.0 and an older record CC BY-NC 3.0. This page is non-commercial and attributes the source.
+`*_catchments.geojson`, `*_rivers.geojson`, `*_outlets.geojson`, `*_slope_flow.geojson` and the catchment rows of `catchments.csv` (one Europe-wide set cut to each map frame) derive from HydroBASINS and HydroRIVERS v1. The HydroSHEDS product pages say the data are freely available for scientific, educational and commercial use with attribution; some catalogues record CC BY 4.0 and an older record CC BY-NC 3.0. This page is non-commercial and attributes the source.
 
 > Lehner, B., Grill G. (2013): Global river hydrography and network routing: baseline data and new approaches to study the world's large river systems. Hydrological Processes 27(15): 2171–2186. Data from HydroSHEDS, https://www.hydrosheds.org. Grouped and summarised by the author.
 
@@ -19,9 +19,11 @@ The bedrock shares in `catchments.csv` and `composition.csv` are statistics comp
 - Northern Ireland: GSNI 1:250 000, Open Government Licence v3.0. "Contains GSNI data under the Open Government Licence v3.0."
 - Ireland: GSI bedrock 1:500 000, CC BY 4.0. "Contains Irish Public Sector Data (Geological Survey Ireland) licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) licence."
 - Poland: PIG 1:1 000 000 geological map, read from the CBDG services; no licence name found, credit to PIG-PIB asked in the rules of use. Only area shares appear here. "Source: Polish Geological Institute - National Research Institute (PIG-PIB)."
-- Where no national map covers the ground (Denmark, Germany, the Netherlands, Belgium, France, the Baltic states and Russia on the North-east Europe frame; Denmark on the North Sea frame): IGME 5000, BGR, free of charge with citation. "Asch, K. and the IGME 5000 project (BGR); DOI 10.25928/igme-5000."
+- Austria: GeoSphere Austria geological map 1:500 000, CC BY 4.0 for the base map (reported; not stated on the INSPIRE record). "Source: GeoSphere Austria."
+- Spain: IGME geological map 1:1 000 000 (units layer), IGME public reuse conditions; the older 1995 edition is CC BY 4.0 on datos.gob.es (reported). Terms for this edition are not confirmed in writing. "Source: Instituto Geológico y Minero de España (IGME)."
+- Where no national map covers the ground (Denmark, Germany, the Netherlands, Belgium, France, Switzerland, Italy, the Balkans, the Baltic states, Portugal, Russia and the rest of Europe): IGME 5000, BGR, free of charge with citation. "Asch, K. and the IGME 5000 project (BGR); DOI 10.25928/igme-5000."
 
-The North-east Europe frame therefore carries statistics from two maps whose terms are not confirmed in writing (PIG, IGME 5000). They are cited as the publishers ask; no polygon of either is served from this page. Decision of the owner, 2026-11-10: both are treated as valid for non-commercial display with attribution, which is what this page does and all it does; if either publisher says otherwise the catchments that rest on them are withdrawn from the comparison.
+The Europe-wide catchment set therefore carries statistics from three maps whose terms are not confirmed in writing (PIG, IGME 5000, and the Spanish 1:1M). They are cited as the publishers ask; no polygon of either is served from this page. Decision of the owner, 2026-11-10: both are treated as valid for non-commercial display with attribution, which is what this page does and all it does; if either publisher says otherwise the catchments that rest on them are withdrawn from the comparison.
 
 ## Terrain
 
