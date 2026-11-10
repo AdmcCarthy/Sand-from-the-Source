@@ -21,7 +21,7 @@ The bedrock shares in `catchments.csv` and `composition.csv` are statistics comp
 - Poland: PIG 1:1 000 000 geological map, read from the CBDG services; no licence name found, credit to PIG-PIB asked in the rules of use. Only area shares appear here. "Source: Polish Geological Institute - National Research Institute (PIG-PIB)."
 - Where no national map covers the ground (Denmark, Germany, the Netherlands, Belgium, France, the Baltic states and Russia on the North-east Europe frame; Denmark on the North Sea frame): IGME 5000, BGR, free of charge with citation. "Asch, K. and the IGME 5000 project (BGR); DOI 10.25928/igme-5000."
 
-The North-east Europe frame therefore carries statistics from two maps whose terms are not confirmed in writing (PIG, IGME 5000). They are cited as the publishers ask; no polygon of either is served from this page.
+The North-east Europe frame therefore carries statistics from two maps whose terms are not confirmed in writing (PIG, IGME 5000). They are cited as the publishers ask; no polygon of either is served from this page. Decision of the owner, 2026-11-10: both are treated as valid for non-commercial display with attribution, which is what this page does and all it does; if either publisher says otherwise the catchments that rest on them are withdrawn from the comparison.
 
 ## Terrain
 

@@ -141,68 +141,68 @@
    },
    "budget": {
     "catchments": 123,
-    "total_qs_mt_yr": 70.45517825944428,
-    "total_sand_mt_yr": 38.76921022938096,
+    "total_qs_mt_yr": 70.45524520243956,
+    "total_sand_mt_yr": 38.350561483010615,
     "median_yield_t_km2_yr": 11.788428659910597,
     "glauconite_prone": 55,
-    "calibration_factor": 5.039760057768802,
+    "calibration_factor": 5.039745775786746,
     "calibration_basis": "median of 6 monitored rivers in this frame (Rhine, Elbe, Vistula, Glomma, Oder, Seine)",
-    "total_qs_cal_mt_yr": 13.979867583346053,
-    "total_sand_cal_mt_yr": 7.692669846378526
+    "total_qs_cal_mt_yr": 13.97992048347735,
+    "total_sand_cal_mt_yr": 7.609622228816448
    },
    "checks": [
     {
      "river": "Rhine",
      "known_mt_yr": 1.0,
-     "model_mt_yr": 9.030545059063197,
-     "ratio_model_over_known": 9.030545059063197,
+     "model_mt_yr": 9.030528668211053,
+     "ratio_model_over_known": 9.030528668211053,
      "q_source": "HydroRIVERS mouth reach",
      "relief_km": 1.149,
-     "temp_c": 7.744710316771689,
+     "temp_c": 7.744699462607986,
      "L": 1.2437303694604662,
      "basis": "about 1 Mt/yr at the German-Dutch border today, near a natural baseline of about 1 Mt/yr (Hoffmann and others 2023, Earth Surface Dynamics)"
     },
     {
      "river": "Elbe",
      "known_mt_yr": 0.6,
-     "model_mt_yr": 4.8102994474641685,
-     "ratio_model_over_known": 8.017165745773614,
+     "model_mt_yr": 4.810310537969673,
+     "ratio_model_over_known": 8.017184229949455,
      "q_source": "HydroRIVERS mouth reach",
      "relief_km": 1.3645,
-     "temp_c": 5.20375124282557,
+     "temp_c": 5.203761080721178,
      "L": 1.3746960365249978,
      "basis": "order 0.5 to 0.8 Mt/yr from German monitoring (BfG), figure from memory, to be checked"
     },
     {
      "river": "Vistula",
      "known_mt_yr": 1.5,
-     "model_mt_yr": 3.900715675783499,
-     "ratio_model_over_known": 2.600477117188999,
+     "model_mt_yr": 3.900715675903912,
+     "ratio_model_over_known": 2.6004771172692744,
      "q_source": "HydroRIVERS mouth reach",
      "relief_km": 2.098,
-     "temp_c": 0.9987330046895753,
+     "temp_c": 0.9987330039177552,
      "L": 1.8074346805462442,
      "basis": "order 1 to 1.6 Mt/yr to the Baltic, figure from memory (HELCOM), to be checked"
     },
     {
      "river": "Glomma",
      "known_mt_yr": 0.4,
-     "model_mt_yr": 0.7469372547362858,
-     "ratio_model_over_known": 1.8673431368407145,
+     "model_mt_yr": 0.7469372295965914,
+     "ratio_model_over_known": 1.8673430739914783,
      "q_source": "HydroRIVERS mouth reach",
      "relief_km": 2.0645,
-     "temp_c": 0.4682014708967037,
+     "temp_c": 0.46820237195642356,
      "L": 0.8775844051769587,
      "basis": "order 0.3 to 0.6 Mt/yr (Bogen, NVE), figure from memory, to be checked"
     },
     {
      "river": "Oder",
      "known_mt_yr": 0.3,
-     "model_mt_yr": 2.243712899504582,
-     "ratio_model_over_known": 7.479042998348606,
+     "model_mt_yr": 2.243704330291265,
+     "ratio_model_over_known": 7.479014434304218,
      "q_source": "HydroRIVERS mouth reach",
      "relief_km": 1.2945,
-     "temp_c": 2.7369828115253387,
+     "temp_c": 2.736973551786715,
      "L": 1.743994584857599,
      "basis": "order 0.2 to 0.4 Mt/yr, figure from memory, to be checked"
     },
@@ -218,7 +218,7 @@
      "basis": "order 0.5 to 0.9 Mt/yr (French export to the sea studies), figure from memory, to be checked"
     }
    ],
-   "built": "2026-11-10T07:58:03+00:00",
+   "built": "2026-11-10T21:44:03+00:00",
    "relief": {
     "extent": [
      2560000,
@@ -379,29 +379,29 @@
    },
    "budget": {
     "catchments": 24,
-    "total_qs_mt_yr": 4.084701992191863,
-    "total_sand_mt_yr": 2.9714894122098174,
-    "median_yield_t_km2_yr": 13.272531293774051,
+    "total_qs_mt_yr": 4.084716904301652,
+    "total_sand_mt_yr": 3.034702323054703,
+    "median_yield_t_km2_yr": 13.272532117881171,
     "glauconite_prone": 7,
-    "calibration_factor": 2.0384689588506975,
+    "calibration_factor": 2.0384724474244114,
     "calibration_basis": "median of 1 monitored rivers in this frame (Glomma)",
-    "total_qs_cal_mt_yr": 2.0038087773947977,
-    "total_sand_cal_mt_yr": 1.457706480791919
+    "total_qs_cal_mt_yr": 2.0038126634787967,
+    "total_sand_cal_mt_yr": 1.488713927376854
    },
    "checks": [
     {
      "river": "Glomma",
      "known_mt_yr": 0.4,
-     "model_mt_yr": 0.8153875835402791,
-     "ratio_model_over_known": 2.0384689588506975,
+     "model_mt_yr": 0.8153889789697646,
+     "ratio_model_over_known": 2.0384724474244114,
      "q_source": "HydroRIVERS mouth reach",
      "relief_km": 2.212,
-     "temp_c": -0.0297850837250897,
+     "temp_c": -0.02983128833007631,
      "L": 0.8775844051769588,
      "basis": "order 0.3 to 0.6 Mt/yr (Bogen, NVE), figure from memory, to be checked"
     }
    ],
-   "built": "2026-11-10T07:58:18+00:00",
+   "built": "2026-11-10T21:44:18+00:00",
    "relief": {
     "extent": [
      -730000,
@@ -552,17 +552,17 @@
    },
    "budget": {
     "catchments": 32,
-    "total_qs_mt_yr": 6.31180553562136,
-    "total_sand_mt_yr": 5.060012369815576,
-    "median_yield_t_km2_yr": 11.268138395134436,
+    "total_qs_mt_yr": 6.311805157397121,
+    "total_sand_mt_yr": 5.060012026928957,
+    "median_yield_t_km2_yr": 11.268137151719134,
     "glauconite_prone": 12,
     "calibration_factor": 2.5,
     "calibration_basis": "no monitored river in this frame; the median factor of the North-east Europe frame is used",
-    "total_qs_cal_mt_yr": 2.524722214248544,
-    "total_sand_cal_mt_yr": 2.0240049479262305
+    "total_qs_cal_mt_yr": 2.5247220629588485,
+    "total_sand_cal_mt_yr": 2.024004810771583
    },
    "checks": [],
-   "built": "2026-11-10T07:58:34+00:00",
+   "built": "2026-11-10T21:44:34+00:00",
    "relief": {
     "extent": [
      -1150000,

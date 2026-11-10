@@ -30,7 +30,7 @@ KEEP = ["system", "name", "kind", "frame", "area_km2", "size_class", "cluster", 
         "temp_c", "q_km3_yr", "q_source", "lithology_factor", "glauconite_prone_shelf", "discharge_cms", "mainstem_km",
         "frac_igneous_felsic", "frac_igneous_mafic", "frac_gneiss_quartzite", "frac_schist", "frac_clastic", "frac_carbonate", "frac_unconsolidated", "frac_other",
         "age_Cenozoic", "age_Mesozoic", "age_Paleozoic", "age_Neoproterozoic", "age_Older_Proterozoic", "age_Archean", "age_unread",
-        "grain_clastic_sand", "grain_clastic_mud", "grain_clastic_mixed"]
+        "grain_clastic_sand", "grain_clastic_mud", "grain_clastic_mixed", "grain_clastic_mixed_sand", "grain_clastic_mixed_mud"]
 
 
 def topo_to_geojson(path: Path, obj: str, keep: list[str] | None = None) -> dict:
@@ -149,7 +149,9 @@ def main() -> None:
         "carbonate_share": (d["frac_carbonate"] * d["area_km2"]).sum() / d["area_km2"].sum(),
         "cover_share": (d["frac_unconsolidated"] * d["area_km2"]).sum() / d["area_km2"].sum(),
         "mud_share": (d["grain_clastic_mud"] * d["area_km2"]).sum() / d["area_km2"].sum(),
-        "mixed_share": (d["grain_clastic_mixed"] * d["area_km2"]).sum() / d["area_km2"].sum(),
+        "mixed_share": ((d["grain_clastic_mixed"] + d["grain_clastic_mixed_sand"] + d["grain_clastic_mixed_mud"]) * d["area_km2"]).sum() / d["area_km2"].sum(),
+        "sand_led_share": (d["grain_clastic_mixed_sand"] * d["area_km2"]).sum() / d["area_km2"].sum(),
+        "mud_led_share": (d["grain_clastic_mixed_mud"] * d["area_km2"]).sum() / d["area_km2"].sum(),
         "schist_share": (d["frac_schist"] * d["area_km2"]).sum() / d["area_km2"].sum(),
         "mafic_share": (d["frac_igneous_mafic"] * d["area_km2"]).sum() / d["area_km2"].sum(),
     })).reset_index()

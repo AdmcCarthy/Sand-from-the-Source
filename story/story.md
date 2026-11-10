@@ -230,7 +230,8 @@ subtitle: Sand quality proxy by catchment, from bedrock shares, grain words and 
 ::: step {beat=answer}
 Norway loses marks for the nappes, {{ nor_schist | pct }} schist and {{ nor_mafic | pct }} mafic rock, and for
 weather that delivers its granite as fresh feldspar: arkose, not quartz arenite. Britain loses them for carbonate and
-for clastic rock mapped as sandstone with mudstone, {{ brit_mixed | pct }} of its area.
+for interbedded rock the survey names mudstone first, {{ brit_mud_led | pct }} of its area; sandstone-first interbeds
+are {{ brit_sand_led | pct }}.
 
 ```chart
 use: basin
