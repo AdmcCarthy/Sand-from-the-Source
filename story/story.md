@@ -106,19 +106,12 @@ North of Stad {{ nor_shield | pct }} of the catchment area is granite, felsic vo
 {{ nor_carbonate | pct }} carbonate. Britain drains Paleozoic clastic rock, much of it shale.
 
 ```chart
-id: comp
-type: bars
-data: composition
-label: catchment
-value: total
-part: [frac_igneous_felsic, frac_gneiss_quartzite, frac_schist, frac_igneous_mafic, frac_clastic, frac_carbonate, frac_unconsolidated, frac_other]
-parts_labels: [granite and felsic volcanics, gneiss and quartzite, schist and phyllite, mafic and metavolcanic, clastic sedimentary, carbonate, unconsolidated cover, not classified]
-title: What the eight largest catchments erode
-subtitle: Share of mapped bedrock area by harmonised class, largest river systems first
-source: s2s
-confidence: derived
-unit: share of mapped area
-notes: Shares are of the mapped area; national maps first, the IGME 5000 where none covers the ground. Classes are read from each survey's own lithology words.
+use: basin
+frame: north_sea
+view: group
+rivers: off
+title: Two shores, two kinds of source
+subtitle: Catchments by bedrock group, rivers hidden
 ```
 :::
 
@@ -136,6 +129,22 @@ subtitle: The Norwegian Sea margin, catchments by bedrock group
 ```
 :::
 
+```chart
+id: comp
+type: bars
+data: composition
+label: catchment
+value: total
+part: [frac_igneous_felsic, frac_gneiss_quartzite, frac_schist, frac_igneous_mafic, frac_clastic, frac_carbonate, frac_unconsolidated, frac_other]
+parts_labels: [granite and felsic volcanics, gneiss and quartzite, schist and phyllite, mafic and metavolcanic, clastic sedimentary, carbonate, unconsolidated cover, not classified]
+title: What the eight largest catchments erode
+subtitle: Share of mapped bedrock area by harmonised class, largest river systems first
+source: s2s
+confidence: derived
+unit: share of mapped area
+notes: Shares are of the mapped area; national maps first, the IGME 5000 where none covers the ground. Classes are read from each survey's own lithology words.
+```
+
 ## How much the rivers carry
 
 ::: step {beat=question}
@@ -143,6 +152,31 @@ subtitle: The Norwegian Sea margin, catchments by bedrock group
 By the BQART relation the two margins supply about {{ qs_total | round:0 }} Mt a year, or
 {{ qs_cal_total | round:0 }} Mt scaled to gauged rivers. The Glomma: {{ glomma_qs | round:1 }} Mt against about
 {{ glomma_known | round:1 }} measured.
+
+```chart
+use: basin
+frame: north_sea
+view: yield
+rivers: off
+title: Yield by catchment
+subtitle: BQART sediment yield, t per km² a year, log scale
+```
+:::
+
+::: step {beat=question}
+The typical yield is {{ median_yield | round:0 }} t per km² a year; the Rhine alone delivers about
+{{ rhine_monitored | cite:hoffmann }} Mt a year. These margins are starved: {{ glauconite_share | pct }} of the larger
+catchments yield slowly enough for glaucony to form offshore.
+
+```chart
+use: basin
+frame: north_sea
+view: yield
+rivers: flow
+title: "Low almost everywhere"
+subtitle: BQART sediment yield, t per km² a year, log scale
+```
+:::
 
 ```chart
 id: budget
@@ -157,22 +191,6 @@ confidence: derived
 unit: Mt a year
 notes: Relief is the catchment's highest point from Relief's 3 km elevation grid; discharge is the HydroRIVERS mouth reach; lithology on the paper's 0.5 to 2 scale; no glaciers; lake trapping guessed per climate zone. Monitored loads are modern and post-dam, so the natural flux lies between this column and the calibrated one.
 ```
-:::
-
-::: step {beat=question}
-The typical yield is {{ median_yield | round:0 }} t per km² a year; the Rhine alone delivers about
-{{ rhine_monitored | cite:hoffmann }} Mt a year. These margins are starved: {{ glauconite_share | pct }} of the larger
-catchments yield slowly enough for glaucony to form offshore.
-
-```chart
-use: basin
-frame: north_sea
-view: yield
-rivers: flow
-title: "Yield by catchment: low almost everywhere"
-subtitle: BQART sediment yield, t per km² a year, log scale
-```
-:::
 
 ## What reaches the shelf
 
