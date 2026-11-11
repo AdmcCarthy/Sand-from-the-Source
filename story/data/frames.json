@@ -151,23 +151,23 @@
    },
    "budget": {
     "catchments": 410,
-    "total_qs_mt_yr": 352.25155634266264,
-    "total_sand_mt_yr": 178.1144079842449,
-    "median_yield_t_km2_yr": 14.371469141192069,
-    "glauconite_prone": 162,
-    "calibration_factor": 5.52248145357855,
+    "total_qs_mt_yr": 375.94735900616104,
+    "total_sand_mt_yr": 189.8835411524868,
+    "median_yield_t_km2_yr": 15.348635550943758,
+    "glauconite_prone": 155,
+    "calibration_factor": 6.169280021187811,
     "calibration_basis": "median of 6 monitored rivers in this frame (Rhine, Elbe, Vistula, Glomma, Oder, Seine)",
-    "total_qs_cal_mt_yr": 63.78501391152791,
-    "total_sand_cal_mt_yr": 32.252604102242366
+    "total_qs_cal_mt_yr": 60.93861159081858,
+    "total_sand_cal_mt_yr": 30.778881895512868
    },
    "checks": [
     {
      "river": "Rhine",
      "known_mt_yr": 1.0,
-     "model_mt_yr": 23.8015062948033,
-     "ratio_model_over_known": 23.8015062948033,
+     "model_mt_yr": 24.35205598525167,
+     "ratio_model_over_known": 24.35205598525167,
      "q_source": "HydroRIVERS mouth reach",
-     "relief_km": 3.3505,
+     "relief_km": 3.428,
      "temp_c": 7.1325722343441065,
      "L": 1.2437303694604662,
      "basis": "about 1 Mt/yr at the German-Dutch border today, near a natural baseline of about 1 Mt/yr (Hoffmann and others 2023, Earth Surface Dynamics)"
@@ -175,10 +175,10 @@
     {
      "river": "Elbe",
      "known_mt_yr": 0.6,
-     "model_mt_yr": 4.749005156440624,
-     "ratio_model_over_known": 7.915008594067707,
+     "model_mt_yr": 4.988240754547031,
+     "ratio_model_over_known": 8.31373459091172,
      "q_source": "HydroRIVERS mouth reach",
-     "relief_km": 1.33,
+     "relief_km": 1.397,
      "temp_c": 5.258551908153044,
      "L": 1.3746960365249978,
      "basis": "order 0.5 to 0.8 Mt/yr from German monitoring (BfG), figure from memory, to be checked"
@@ -186,10 +186,10 @@
     {
      "river": "Vistula",
      "known_mt_yr": 1.5,
-     "model_mt_yr": 3.678438366835253,
-     "ratio_model_over_known": 2.4522922445568356,
+     "model_mt_yr": 3.8950358243719263,
+     "ratio_model_over_known": 2.596690549581284,
      "q_source": "HydroRIVERS mouth reach",
-     "relief_km": 1.9785,
+     "relief_km": 2.095,
      "temp_c": 0.9990868696675868,
      "L": 1.8074346805462445,
      "basis": "order 1 to 1.6 Mt/yr to the Baltic, figure from memory (HELCOM), to be checked"
@@ -197,10 +197,10 @@
     {
      "river": "Glomma",
      "known_mt_yr": 0.4,
-     "model_mt_yr": 0.7271112858310711,
-     "ratio_model_over_known": 1.8177782145776777,
+     "model_mt_yr": 0.7661642277380608,
+     "ratio_model_over_known": 1.915410569345152,
      "q_source": "HydroRIVERS mouth reach",
-     "relief_km": 2.0015,
+     "relief_km": 2.109,
      "temp_c": 0.3607116813648102,
      "L": 0.8775844051769587,
      "basis": "order 0.3 to 0.6 Mt/yr (Bogen, NVE), figure from memory, to be checked"
@@ -208,10 +208,10 @@
     {
      "river": "Oder",
      "known_mt_yr": 0.3,
-     "model_mt_yr": 2.0579999861531593,
-     "ratio_model_over_known": 6.8599999538438645,
+     "model_mt_yr": 2.4380207898381383,
+     "ratio_model_over_known": 8.126735966127129,
      "q_source": "HydroRIVERS mouth reach",
-     "relief_km": 1.1535,
+     "relief_km": 1.3665,
      "temp_c": 2.8079292582193323,
      "L": 1.743994584857599,
      "basis": "order 0.2 to 0.4 Mt/yr, figure from memory, to be checked"
@@ -219,16 +219,16 @@
     {
      "river": "Seine",
      "known_mt_yr": 0.7,
-     "model_mt_yr": 2.9294740673192643,
-     "ratio_model_over_known": 4.184962953313235,
+     "model_mt_yr": 2.948276853373945,
+     "ratio_model_over_known": 4.211824076248494,
      "q_source": "HydroRIVERS mouth reach",
-     "relief_km": 0.779,
+     "relief_km": 0.784,
      "temp_c": 8.5,
      "L": 1.2474961856431217,
      "basis": "order 0.5 to 0.9 Mt/yr (French export to the sea studies), figure from memory, to be checked"
     }
    ],
-   "built": "2026-11-10T22:02:17+00:00",
+   "built": "2026-11-10T22:25:59+00:00",
    "relief": {
     "extent": [
      2560000,
@@ -419,23 +419,23 @@
    },
    "budget": {
     "catchments": 410,
-    "total_qs_mt_yr": 352.25155634266264,
-    "total_sand_mt_yr": 178.1144079842449,
-    "median_yield_t_km2_yr": 14.371469141192069,
-    "glauconite_prone": 162,
-    "calibration_factor": 5.52248145357855,
+    "total_qs_mt_yr": 375.94735900616104,
+    "total_sand_mt_yr": 189.8835411524868,
+    "median_yield_t_km2_yr": 15.348635550943758,
+    "glauconite_prone": 155,
+    "calibration_factor": 6.169280021187811,
     "calibration_basis": "median of 6 monitored rivers in this frame (Rhine, Elbe, Vistula, Glomma, Oder, Seine)",
-    "total_qs_cal_mt_yr": 63.78501391152791,
-    "total_sand_cal_mt_yr": 32.252604102242366
+    "total_qs_cal_mt_yr": 60.93861159081858,
+    "total_sand_cal_mt_yr": 30.778881895512868
    },
    "checks": [
     {
      "river": "Rhine",
      "known_mt_yr": 1.0,
-     "model_mt_yr": 23.8015062948033,
-     "ratio_model_over_known": 23.8015062948033,
+     "model_mt_yr": 24.35205598525167,
+     "ratio_model_over_known": 24.35205598525167,
      "q_source": "HydroRIVERS mouth reach",
-     "relief_km": 3.3505,
+     "relief_km": 3.428,
      "temp_c": 7.1325722343441065,
      "L": 1.2437303694604662,
      "basis": "about 1 Mt/yr at the German-Dutch border today, near a natural baseline of about 1 Mt/yr (Hoffmann and others 2023, Earth Surface Dynamics)"
@@ -443,10 +443,10 @@
     {
      "river": "Elbe",
      "known_mt_yr": 0.6,
-     "model_mt_yr": 4.749005156440624,
-     "ratio_model_over_known": 7.915008594067707,
+     "model_mt_yr": 4.988240754547031,
+     "ratio_model_over_known": 8.31373459091172,
      "q_source": "HydroRIVERS mouth reach",
-     "relief_km": 1.33,
+     "relief_km": 1.397,
      "temp_c": 5.258551908153044,
      "L": 1.3746960365249978,
      "basis": "order 0.5 to 0.8 Mt/yr from German monitoring (BfG), figure from memory, to be checked"
@@ -454,10 +454,10 @@
     {
      "river": "Vistula",
      "known_mt_yr": 1.5,
-     "model_mt_yr": 3.678438366835253,
-     "ratio_model_over_known": 2.4522922445568356,
+     "model_mt_yr": 3.8950358243719263,
+     "ratio_model_over_known": 2.596690549581284,
      "q_source": "HydroRIVERS mouth reach",
-     "relief_km": 1.9785,
+     "relief_km": 2.095,
      "temp_c": 0.9990868696675868,
      "L": 1.8074346805462445,
      "basis": "order 1 to 1.6 Mt/yr to the Baltic, figure from memory (HELCOM), to be checked"
@@ -465,10 +465,10 @@
     {
      "river": "Glomma",
      "known_mt_yr": 0.4,
-     "model_mt_yr": 0.7271112858310711,
-     "ratio_model_over_known": 1.8177782145776777,
+     "model_mt_yr": 0.7661642277380608,
+     "ratio_model_over_known": 1.915410569345152,
      "q_source": "HydroRIVERS mouth reach",
-     "relief_km": 2.0015,
+     "relief_km": 2.109,
      "temp_c": 0.3607116813648102,
      "L": 0.8775844051769587,
      "basis": "order 0.3 to 0.6 Mt/yr (Bogen, NVE), figure from memory, to be checked"
@@ -476,10 +476,10 @@
     {
      "river": "Oder",
      "known_mt_yr": 0.3,
-     "model_mt_yr": 2.0579999861531593,
-     "ratio_model_over_known": 6.8599999538438645,
+     "model_mt_yr": 2.4380207898381383,
+     "ratio_model_over_known": 8.126735966127129,
      "q_source": "HydroRIVERS mouth reach",
-     "relief_km": 1.1535,
+     "relief_km": 1.3665,
      "temp_c": 2.8079292582193323,
      "L": 1.743994584857599,
      "basis": "order 0.2 to 0.4 Mt/yr, figure from memory, to be checked"
@@ -487,16 +487,16 @@
     {
      "river": "Seine",
      "known_mt_yr": 0.7,
-     "model_mt_yr": 2.9294740673192643,
-     "ratio_model_over_known": 4.184962953313235,
+     "model_mt_yr": 2.948276853373945,
+     "ratio_model_over_known": 4.211824076248494,
      "q_source": "HydroRIVERS mouth reach",
-     "relief_km": 0.779,
+     "relief_km": 0.784,
      "temp_c": 8.5,
      "L": 1.2474961856431217,
      "basis": "order 0.5 to 0.9 Mt/yr (French export to the sea studies), figure from memory, to be checked"
     }
    ],
-   "built": "2026-11-10T22:02:17+00:00",
+   "built": "2026-11-10T22:25:59+00:00",
    "relief": {
     "extent": [
      -730000,
@@ -672,23 +672,23 @@
    },
    "budget": {
     "catchments": 410,
-    "total_qs_mt_yr": 352.25155634266264,
-    "total_sand_mt_yr": 178.1144079842449,
-    "median_yield_t_km2_yr": 14.371469141192069,
-    "glauconite_prone": 162,
-    "calibration_factor": 5.52248145357855,
+    "total_qs_mt_yr": 375.94735900616104,
+    "total_sand_mt_yr": 189.8835411524868,
+    "median_yield_t_km2_yr": 15.348635550943758,
+    "glauconite_prone": 155,
+    "calibration_factor": 6.169280021187811,
     "calibration_basis": "median of 6 monitored rivers in this frame (Rhine, Elbe, Vistula, Glomma, Oder, Seine)",
-    "total_qs_cal_mt_yr": 63.78501391152791,
-    "total_sand_cal_mt_yr": 32.252604102242366
+    "total_qs_cal_mt_yr": 60.93861159081858,
+    "total_sand_cal_mt_yr": 30.778881895512868
    },
    "checks": [
     {
      "river": "Rhine",
      "known_mt_yr": 1.0,
-     "model_mt_yr": 23.8015062948033,
-     "ratio_model_over_known": 23.8015062948033,
+     "model_mt_yr": 24.35205598525167,
+     "ratio_model_over_known": 24.35205598525167,
      "q_source": "HydroRIVERS mouth reach",
-     "relief_km": 3.3505,
+     "relief_km": 3.428,
      "temp_c": 7.1325722343441065,
      "L": 1.2437303694604662,
      "basis": "about 1 Mt/yr at the German-Dutch border today, near a natural baseline of about 1 Mt/yr (Hoffmann and others 2023, Earth Surface Dynamics)"
@@ -696,10 +696,10 @@
     {
      "river": "Elbe",
      "known_mt_yr": 0.6,
-     "model_mt_yr": 4.749005156440624,
-     "ratio_model_over_known": 7.915008594067707,
+     "model_mt_yr": 4.988240754547031,
+     "ratio_model_over_known": 8.31373459091172,
      "q_source": "HydroRIVERS mouth reach",
-     "relief_km": 1.33,
+     "relief_km": 1.397,
      "temp_c": 5.258551908153044,
      "L": 1.3746960365249978,
      "basis": "order 0.5 to 0.8 Mt/yr from German monitoring (BfG), figure from memory, to be checked"
@@ -707,10 +707,10 @@
     {
      "river": "Vistula",
      "known_mt_yr": 1.5,
-     "model_mt_yr": 3.678438366835253,
-     "ratio_model_over_known": 2.4522922445568356,
+     "model_mt_yr": 3.8950358243719263,
+     "ratio_model_over_known": 2.596690549581284,
      "q_source": "HydroRIVERS mouth reach",
-     "relief_km": 1.9785,
+     "relief_km": 2.095,
      "temp_c": 0.9990868696675868,
      "L": 1.8074346805462445,
      "basis": "order 1 to 1.6 Mt/yr to the Baltic, figure from memory (HELCOM), to be checked"
@@ -718,10 +718,10 @@
     {
      "river": "Glomma",
      "known_mt_yr": 0.4,
-     "model_mt_yr": 0.7271112858310711,
-     "ratio_model_over_known": 1.8177782145776777,
+     "model_mt_yr": 0.7661642277380608,
+     "ratio_model_over_known": 1.915410569345152,
      "q_source": "HydroRIVERS mouth reach",
-     "relief_km": 2.0015,
+     "relief_km": 2.109,
      "temp_c": 0.3607116813648102,
      "L": 0.8775844051769587,
      "basis": "order 0.3 to 0.6 Mt/yr (Bogen, NVE), figure from memory, to be checked"
@@ -729,10 +729,10 @@
     {
      "river": "Oder",
      "known_mt_yr": 0.3,
-     "model_mt_yr": 2.0579999861531593,
-     "ratio_model_over_known": 6.8599999538438645,
+     "model_mt_yr": 2.4380207898381383,
+     "ratio_model_over_known": 8.126735966127129,
      "q_source": "HydroRIVERS mouth reach",
-     "relief_km": 1.1535,
+     "relief_km": 1.3665,
      "temp_c": 2.8079292582193323,
      "L": 1.743994584857599,
      "basis": "order 0.2 to 0.4 Mt/yr, figure from memory, to be checked"
@@ -740,16 +740,16 @@
     {
      "river": "Seine",
      "known_mt_yr": 0.7,
-     "model_mt_yr": 2.9294740673192643,
-     "ratio_model_over_known": 4.184962953313235,
+     "model_mt_yr": 2.948276853373945,
+     "ratio_model_over_known": 4.211824076248494,
      "q_source": "HydroRIVERS mouth reach",
-     "relief_km": 0.779,
+     "relief_km": 0.784,
      "temp_c": 8.5,
      "L": 1.2474961856431217,
      "basis": "order 0.5 to 0.9 Mt/yr (French export to the sea studies), figure from memory, to be checked"
     }
    ],
-   "built": "2026-11-10T22:02:17+00:00",
+   "built": "2026-11-10T22:25:59+00:00",
    "relief": {
     "extent": [
      -1150000,
