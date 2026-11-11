@@ -35,6 +35,7 @@ def _t(d, terrain, col):
 
 def metrics(d):
     c = d["catchments"]
+    c = c[c["terrain"] != "Beyond Europe"]  # totals and medians are for Europe: ground beyond its edge is drawn and listed, not counted
     sys_ = c[c.kind == "system"]
     f = d["frames"]["frames"]
     qs = c["qs_mt_yr"].sum()

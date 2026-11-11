@@ -138,7 +138,7 @@ def main() -> None:
     eu_rivers = topo_to_geojson(EU / "rivers.topojson", "rivers", ["system", "log_discharge"])
     eu_outlets = json.loads((EU / "outlets.geojson").read_text(encoding="utf-8"))
     eu_flow = json.loads((EU / "slope_flow.geojson").read_text(encoding="utf-8"))
-    flow_crs = json.loads((RELIEF / "atlantic" / "demo" / "meta.json").read_text(encoding="utf-8"))["crs"]
+    flow_crs = json.loads((RELIEF / eu["relief"]["region"] / "demo" / "meta.json").read_text(encoding="utf-8"))["crs"]  # the lines are in Relief's frame CRS
     for fr in FRAMES:
         lay = json.loads((S2S / fr / "layers.json").read_text(encoding="utf-8"))
         rr = RELIEF_REGION[fr]
@@ -149,7 +149,7 @@ def main() -> None:
         (OUT / f"{fr}_catchments.geojson").write_text(json.dumps(cat, separators=(",", ":")), encoding="utf-8")
         (OUT / f"{fr}_rivers.geojson").write_text(json.dumps(cut_to_frame(eu_rivers, eu_crs, fcrs, ext), separators=(",", ":")), encoding="utf-8")
         (OUT / f"{fr}_outlets.geojson").write_text(json.dumps(cut_to_frame(eu_outlets, eu_crs, fcrs, ext), separators=(",", ":")), encoding="utf-8")
-        sf = cut_to_frame(eu_flow, flow_crs, fcrs, ext, thin=3, min_cells=6)
+        sf = cut_to_frame(eu_flow, flow_crs, fcrs, ext, thin=5, min_cells=6)
         (OUT / f"{fr}_slope_flow.geojson").write_text(json.dumps(sf, separators=(",", ":")), encoding="utf-8")
         # Relief: the hillshade reduced to IMG_W px wide and the 0 m land band, with the frame extent
         im = Image.open(RELIEF / rr / "regional_hillshade.png").convert("L")
