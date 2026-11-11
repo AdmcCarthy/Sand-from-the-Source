@@ -23,7 +23,7 @@ The bedrock shares in `catchments.csv` and `composition.csv` are statistics comp
 - Spain: IGME geological map 1:1 000 000 (units layer), IGME public reuse conditions; the older 1995 edition is CC BY 4.0 on datos.gob.es (reported). Terms for this edition are not confirmed in writing. "Source: Instituto Geológico y Minero de España (IGME)."
 - Where no national map covers the ground (Denmark, Germany, the Netherlands, Belgium, France, Switzerland, Italy, the Balkans, the Baltic states, Portugal, Russia and the rest of Europe): IGME 5000, BGR, free of charge with citation. "Asch, K. and the IGME 5000 project (BGR); DOI 10.25928/igme-5000."
 
-The Europe-wide catchment set therefore carries statistics from three maps whose terms are not confirmed in writing (PIG, IGME 5000, and the Spanish 1:1M). They are cited as the publishers ask; no polygon of either is served from this page. Decision of the owner, 2026-11-10: both are treated as valid for non-commercial display with attribution, which is what this page does and all it does; if either publisher says otherwise the catchments that rest on them are withdrawn from the comparison.
+The Europe-wide catchment set therefore carries statistics from three maps whose terms are not confirmed in writing (PIG, IGME 5000, and the Spanish 1:1M). They are cited as the publishers ask; no polygon of either is served from this page. Decision of the owner, 2026-11-10: all three, and the Austrian base map, are treated as valid for open non-commercial display with attribution, which is what this page does and all it does; if a publisher says otherwise the catchments that rest on its map are withdrawn from the comparison.
 
 ## Terrain
 

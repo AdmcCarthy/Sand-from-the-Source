@@ -46,6 +46,7 @@ export default function basin(el, datasets, opts = {}) {
   const ctx = canvas.getContext("2d");
   const cache = {};
   let last = null;
+  let keyOpen = false;  // phones: the key is closed until asked for, so it does not cover the map
 
   async function load(frame) {
     if (cache[frame]) return cache[frame];
@@ -136,7 +137,15 @@ export default function basin(el, datasets, opts = {}) {
     for (const s of D.meta.sinks || []) { if (!toXY) break; const p = proj(toXY(s.lon, s.lat)); ctx.fillText(s.name, p[0], p[1]); }
     ctx.restore();
     ctx.strokeStyle = dark ? "rgba(255,255,255,.2)" : "rgba(0,0,0,.2)"; ctx.lineWidth = 1; ctx.strokeRect(px0, py0, px1 - px0, py1 - py0);
-    legend(view, rivers, D, dark, H, strip ? LH : 0);
+    if (strip) legend(view, rivers, D, dark, H, LH);
+    else {
+      if (keyOpen) legend(view, rivers, D, dark, H, 0, 34);
+      // the key's button, bottom left; a tap on it opens or closes the key
+      ctx.save(); ctx.font = "600 11px system-ui, sans-serif"; const bw = 62, bh = 24, bx = 8, by = H - bh - 8;
+      ctx.fillStyle = dark ? "rgba(27,34,48,.85)" : "rgba(245,247,249,.9)"; ctx.fillRect(bx, by, bw, bh);
+      ctx.strokeStyle = dark ? "rgba(255,255,255,.3)" : "rgba(0,0,0,.25)"; ctx.strokeRect(bx + 0.5, by + 0.5, bw - 1, bh - 1);
+      ctx.fillStyle = dark ? "#e6e9ee" : "#26323d"; ctx.textAlign = "center"; ctx.fillText(keyOpen ? "Key \u00d7" : "Key", bx + bw / 2, by + 16); ctx.restore();
+    }
   }
 
   // Legend, bottom left: swatches for groups, and for every ramp a bar with ticks at the values that matter (log scales are
@@ -150,8 +159,8 @@ export default function basin(el, datasets, opts = {}) {
     return Math.max(nGroups * 15, 40) + 18;
   }
 
-  function legend(view, rivers, D, dark, H, LH = 0) {
-    ctx.save(); ctx.font = "11px system-ui, sans-serif"; let x = 12; const ink = dark ? "#e6e9ee" : "#26323d", muted = dark ? "rgba(230,233,238,.75)" : "rgba(38,50,61,.75)"; let y = H - 12;
+  function legend(view, rivers, D, dark, H, LH = 0, pad = 0) {
+    ctx.save(); ctx.font = "11px system-ui, sans-serif"; let x = 12; const ink = dark ? "#e6e9ee" : "#26323d", muted = dark ? "rgba(230,233,238,.75)" : "rgba(38,50,61,.75)"; let y = H - 12 - pad;
     const BW = 210, BH = 11, bottom = y, gap = 28;
     // strip mode: each block is a column of its own along the bottom; the cursor `x` moves right after each one
     const block = (w) => { if (LH) { x += w + gap; y = bottom; } };
@@ -161,7 +170,7 @@ export default function basin(el, datasets, opts = {}) {
     const panelH = (view === "group" ? nGroups * 15 : 35) + (rivers === "slope" || rivers === "all" ? 35 : 0) + (ds ? 35 : 0) + 6;
     const labelW = view === "group" ? Math.max(...Object.values(D.meta.clusters).map((c) => ctx.measureText(`${c.name} (${c.n_systems})`).width), unmapped(D) ? ctx.measureText("bedrock not mapped in open data (under half the area)").width : 0) + 18 : 0;
     if (LH) { ctx.fillStyle = dark ? "rgba(27,34,48,.6)" : "rgba(245,247,249,.7)"; ctx.fillRect(0, H - LH, ctx.canvas.width, LH); }
-    else { ctx.fillStyle = dark ? "rgba(27,34,48,.78)" : "rgba(245,247,249,.82)"; ctx.fillRect(x - 7, H - 12 - panelH - 2, Math.max(BW, labelW, 240) + 14, panelH + 12); }
+    else { ctx.fillStyle = dark ? "rgba(27,34,48,.78)" : "rgba(245,247,249,.82)"; ctx.fillRect(x - 7, H - 12 - pad - panelH - 2, Math.max(BW, labelW, 240) + 14, panelH + 12); }
     const row = (col, label) => { ctx.fillStyle = col; ctx.fillRect(x, y - 9, 12, 9); ctx.fillStyle = ink; ctx.fillText(label, x + 18, y); y -= 15; };
     const bar = (title, rampOf, ticks) => {
       ctx.font = "10px system-ui, sans-serif"; ctx.fillStyle = muted; ctx.textAlign = "left";
@@ -189,6 +198,11 @@ export default function basin(el, datasets, opts = {}) {
     return null;
   }
 
+  canvas.addEventListener("click", (e) => {
+    if (!last || last[0] >= 760) return;
+    const r = canvas.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+    if (x < 78 && y > r.height - 40) { keyOpen = !keyOpen; draw(...last); }
+  });
   onSchemeChange(() => last && draw(...last));
   return { draw, repaint: () => last && draw(...last) };
 }
