@@ -72,9 +72,8 @@ the North Sea's three sources beside the rest of the continent; and says where t
 ### The catchments of Europe
 
 Each outlined area is one HydroSHEDS catchment: {{ n_systems }} whole river systems and the rest coastal groups,
-{{ area_mkm2 | round:1 }} million km² in all, every one whole even where its mouth is far off the map. The edge of the
-map takes in some ground outside Europe (Anatolia, the Caucasus, North Africa); those catchments are drawn and listed
-but left out of the comparisons. Ribbons are rivers, wider with more water, over the fine fall lines of
+{{ area_mkm2 | round:1 }} million km² in all, every one whole even where its mouth is far off the map. Ground beyond
+Europe's edge (Anatolia, the Caucasus, North Africa) is drawn and listed but counted nowhere. Ribbons are rivers, wider with more water, over the fine fall lines of
 the terrain; dots are mouths; colour is the bedrock group. The sea floor is on Relief's depth scale.
 
 ```chart
