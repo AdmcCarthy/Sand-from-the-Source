@@ -24,3 +24,9 @@ python ../SubScout/scripts/readability.py _site
 ```
 
 The extracts are rebuilt with `uv run --project ../source-to-sink python scripts/make_extracts.py` when the pipeline changes.
+
+## Licence and acknowledgement
+
+MIT License with Acknowledgement ([LICENSE](LICENSE)): the MIT terms plus one condition. Anything built with this work says so,
+visibly and in plain words, and does not imply endorsement: "Built with Sand from the Source by Adam McCarthy (https://github.com/AdmcCarthy/Sand-from-the-Source)". The wording is custom, so
+the licence is not OSI-approved. Data terms and attribution lines are in DATA-LICENCE.md; third-party data and vendored code keep their own terms.
